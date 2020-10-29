@@ -28,6 +28,7 @@ namespace OCA\Build\Controller\App;
 use OCA\Build\AppInfo\Application;
 use OCA\Build\Service\Manifest;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
@@ -76,7 +77,7 @@ class AppController extends OCSController {
 			'appName' => 'Dummy App ' . $buildAppId,
 		];
 
-		return new DataResponse($appData);
+		return new JSONResponse($appData);
 	}
 
 	public function export(int $buildAppId): Response {
@@ -91,10 +92,10 @@ class AppController extends OCSController {
 			'appName' => 'Dummy App ' . $buildAppId,
 		];
 
-		return new DataResponse(['manifest' => $this->manifestService->appDataToXML($appData)]);
+		return new JSONResponse(['manifest' => $this->manifestService->appDataToXML($appData)]);
 	}
 
-	public function update(int $buildAppId, array $appData) {
+	public function update(int $buildAppId, string $key, string $value) {
 		// FIXME: pseudo code
 		// check valid id
 		// get app representation
