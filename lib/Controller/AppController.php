@@ -27,6 +27,7 @@ namespace OCA\Build\Controller\App;
 
 use OCA\Build\AppInfo\Application;
 use OCA\Build\Service\Manifest;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
@@ -55,7 +56,7 @@ class AppController extends OCSController {
 		$response = new DataResponse();
 
 		if ($this->manifestService->isValid($manifest)) {
-			$response->setStatus(400);
+			$response->setStatus(Http::STATUS_BAD_REQUEST);
 			$response->setData(['error' => 'Cannot parse manifest']);
 			return $response;
 		}
