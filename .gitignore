@@ -1,0 +1,32 @@
+.DS_Store
+node_modules/
+vendor/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+composer.lock
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+.marginalia
+
+build/
+coverage/
+
+cypress/screenshots
+cypress/snapshots
+
+# Compiled files
+js/
+
+# Compile-Cache
+v8-compile-cache-0/
+
+# php-cs cache
+.php_cs.cache
