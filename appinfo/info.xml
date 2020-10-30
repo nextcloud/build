@@ -1,0 +1,37 @@
+﻿<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>build</id>
+    <name>Build</name>
+    <summary>Create Nextcloud Build apps</summary>
+    <description><![CDATA[Tool to create and modify Nextcloud Build apps]]></description>
+
+    <version>1.0.0</version>
+    <licence>agpl</licence>
+
+	<author mail="blizzz@arthur-schiwon.de">blizzz></author>
+	<author mail="skjnldsv@protonmail.com">skjnldsv></author>
+
+    <namespace>Build</namespace>
+    <category>tools</category>
+
+    <website>https://github.com/nextcloud/build</website>
+    <bugs>https://github.com/nextcloud/build/issues</bugs>
+    <repository type="git">https://github.com/nextcloud/build</repository>
+    <documentation>
+        <admin>https://github.com/nextcloud/build/blob/master/README.md</admin>
+    </documentation>
+
+    <dependencies>
+        <nextcloud min-version="20" max-version="21"/>
+    </dependencies>
+
+	<navigations>
+		<navigation>
+			<name>Build</name>
+			<route>build.page.index</route>
+			<icon>build.svg</icon>
+			<order>50</order>
+		</navigation>
+	</navigations>
+</info>
