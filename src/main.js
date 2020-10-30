@@ -31,7 +31,7 @@ import Vue from 'vue'
 import Tooltip from '@nextcloud/vue/dist/Directives/Tooltip'
 
 import router from './router'
-import Forms from './Forms'
+import Designer from './Designer'
 
 Vue.directive('tooltip', Tooltip)
 
@@ -52,7 +52,7 @@ __webpack_public_path__ = generateFilePath('build', '', 'js/')
 export default new Vue({
 	el: '#content',
 	// eslint-disable-next-line vue/match-component-file-name
-	name: 'FormsRoot',
+	name: 'DesignerRoot',
 	router,
-	render: h => h(Forms),
+	render: h => h(Designer),
 })

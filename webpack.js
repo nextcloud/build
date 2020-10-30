@@ -5,7 +5,6 @@ const webpackConfig = require('@nextcloud/webpack-vue-config')
 
 const config = {
 	entry: {
-		designer: path.resolve(path.join('src', 'designer.js')),
 		app: path.resolve(path.join('src', 'app.js')),
 	},
 	module: {

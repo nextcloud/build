@@ -22,37 +22,37 @@
   -->
 
 <template>
-	<Content app-name="forms">
+	<Content app-name="apps">
 		<AppNavigation>
-			<AppNavigationNew button-class="icon-add" :text="t('build', 'New form')" @click="onNewForm" />
+			<AppNavigationNew button-class="icon-add" :text="t('build', 'New app')" @click="onNewForm" />
 			<template #list>
-				<AppNavigationForm v-for="form in forms"
-					:key="form.id"
-					:form="form"
+				<AppNavigationForm v-for="app in apps"
+					:key="app.id"
+					:app="app"
 					@mobile-close-navigation="mobileCloseNavigation"
 					@delete="onDeleteForm" />
 			</template>
 		</AppNavigation>
 
-		<!-- No forms & loading emptycontents -->
-		<AppContent v-if="loading || noForms || (!routeHash && $route.name !== 'create')">
+		<!-- No apps & loading emptycontents -->
+		<AppContent v-if="loading || noApps || (!routeHash && $route.name !== 'create')">
 			<EmptyContent v-if="loading" icon="icon-loading">
-				{{ t('build', 'Loading forms …') }}
+				{{ t('build', 'Loading apps …') }}
 			</EmptyContent>
-			<EmptyContent v-else-if="noForms">
-				{{ t('build', 'No forms created yet') }}
+			<EmptyContent v-else-if="noApps">
+				{{ t('build', 'No apps created yet') }}
 				<template #action>
 					<button class="primary" @click="onNewForm">
-						{{ t('build', 'Create a form') }}
+						{{ t('build', 'Create an app') }}
 					</button>
 				</template>
 			</EmptyContent>
 
 			<EmptyContent v-else>
-				{{ t('build', 'Select a form or create a new one') }}
+				{{ t('build', 'Select an app or create a new one') }}
 				<template #action>
 					<button class="primary" @click="onNewForm">
-						{{ t('build', 'Create new form') }}
+						{{ t('build', 'Create new app') }}
 					</button>
 				</template>
 			</EmptyContent>
@@ -60,9 +60,9 @@
 
 		<!-- No errors show router content -->
 		<template v-else>
-			<router-view :form.sync="selectedForm" />
+			<router-view :app.sync="selectedForm" />
 			<router-view v-if="!selectedForm.partial"
-				:form="selectedForm"
+				:app="selectedForm"
 				name="sidebar" />
 		</template>
 	</Content>
@@ -84,7 +84,7 @@ import AppNavigationForm from './components/AppNavigationForm'
 import EmptyContent from './components/EmptyContent'
 
 export default {
-	name: 'build',
+	name: 'Designer',
 
 	components: {
 		AppNavigationForm,
@@ -100,13 +100,13 @@ export default {
 	data() {
 		return {
 			loading: true,
-			forms: [],
+			apps: [],
 		}
 	},
 
 	computed: {
-		noForms() {
-			return this.forms && this.forms.length === 0
+		noApps() {
+			return this.apps && this.apps.length === 0
 		},
 
 		routeHash() {
@@ -115,19 +115,19 @@ export default {
 
 		selectedForm: {
 			get() {
-				return this.forms.find(form => form.hash === this.routeHash)
+				return this.apps.find(app => app.hash === this.routeHash)
 			},
-			set(form) {
-				const index = this.forms.findIndex(search => search.hash === this.routeHash)
+			set(app) {
+				const index = this.apps.findIndex(search => search.hash === this.routeHash)
 				if (index > -1) {
-					this.$set(this.forms, index, form)
+					this.$set(this.apps, index, app)
 				}
 			},
 		},
 	},
 
 	beforeMount() {
-		this.loadForms()
+		this.loadApps()
 	},
 
 	methods: {
@@ -141,15 +141,15 @@ export default {
 		},
 
 		/**
-		 * Initial forms load
+		 * Initial apps load
 		 */
-		async loadForms() {
+		async loadApps() {
 			this.loading = true
 			try {
-				const response = await axios.get(generateOcsUrl('apps/forms/api/v1', 2) + 'build')
-				this.forms = response.data
+				const response = await axios.get(generateOcsUrl('apps/build/api/v1', 2) + 'build')
+				this.apps = response.data
 			} catch (error) {
-				showError(t('build', 'An error occurred while loading the forms list'))
+				showError(t('build', 'An error occurred while loading the apps list'))
 				console.error(error)
 			} finally {
 				this.loading = false
@@ -161,30 +161,30 @@ export default {
 		 */
 		async onNewForm() {
 			try {
-				// Request a new empty form
-				const response = await axios.post(generateOcsUrl('apps/forms/api/v1', 2) + 'form')
-				const newForm = response.data
-				this.forms.unshift(newForm)
-				this.$router.push({ name: 'edit', params: { hash: newForm.hash } })
+				// Request a new empty app
+				const response = await axios.post(generateOcsUrl('apps/build/api/v1', 2) + 'app')
+				const newApp = response.data
+				this.apps.unshift(newApp)
+				this.$router.push({ name: 'edit', params: { hash: newApp.hash } })
 				this.mobileCloseNavigation()
 			} catch (error) {
-				showError(t('build', 'Unable to create a new form'))
+				showError(t('build', 'Unable to create a new app'))
 				console.error(error)
 			}
 		},
 
 		/**
-		 * Remove form from forms list after successful server deletion request
+		 * Remove app from apps list after successful server deletion request
 		 *
-		 * @param {Number} id the form id
+		 * @param {Number} id the app id
 		 */
 		async onDeleteForm(id) {
-			const formIndex = this.forms.findIndex(form => form.id === id)
-			const deletedHash = this.forms[formIndex].hash
+			const appIndex = this.apps.findIndex(app => app.id === id)
+			const deletedHash = this.apps[appIndex].hash
 
-			this.forms.splice(formIndex, 1)
+			this.apps.splice(appIndex, 1)
 
-			// Redirect if current form has been deleted
+			// Redirect if current app has been deleted
 			if (deletedHash === this.routeHash) {
 				this.$router.push({ name: 'root' })
 			}
