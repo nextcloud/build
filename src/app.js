@@ -23,7 +23,7 @@
 import { translate, translatePlural } from '@nextcloud/l10n'
 import Vue from 'vue'
 
-import Fill from './views/Submit'
+import App from './views/App'
 
 Vue.prototype.t = translate
 Vue.prototype.n = translatePlural
@@ -31,6 +31,6 @@ Vue.prototype.n = translatePlural
 export default new Vue({
 	el: '#content',
 	// eslint-disable-next-line vue/match-component-file-name
-	name: 'FormsSubmitRoot',
-	render: h => h(Fill),
+	name: 'BuildAppRoot',
+	render: h => h(App),
 })
