@@ -1,0 +1,22 @@
+name: Lint manifest and reference app
+
+on: [push]
+
+jobs:
+  xml-lint-app:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Download base schema
+      run: wget https://www.w3.org/2001/XMLSchema.xsd 
+    - name: Lint schema
+      uses: ChristophWurst/xmllint-action@v1
+      with: 
+        xml-file: ./resources/manifest.xsd
+        xml-schema-file: ./XMLSchema.xsd
+    - name: Lint reference app
+      uses: ChristophWurst/xmllint-action@v1
+      with:
+        xml-file: ./resources/reference-app.xml
+        xml-schema-file: ./resources/manifest.xsd

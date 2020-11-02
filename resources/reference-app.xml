@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<buildapp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="./manifest.xsd">
+	<metadata>
+		<version>1.0.0</version>
+		<created>2020-11-01T20:26:34+01:00</created>
+		<last-modified>2020-11-01T22:13:30+01:00</last-modified>
+	</metadata>
+	<appinfo>
+		<name>Software Test Management</name>
+		<icon>PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93
+			d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtNy45MDYyIDFhNyA3IDAgMCAwLTYuOTA2MiA3
+			IDcgNyAwIDAgMCA3IDcgNyA3IDAgMCAwIDctNyA3IDcgMCAwIDAtNy03IDcgNyAwIDAgMC0wLjA5
+			Mzc1IDB6bTAuMDkzNzUgMi42OTkyYTQuMyA0LjMgMCAwIDEgNC4zMDA4IDQuMzAwOCA0LjMgNC4z
+			IDAgMCAxLTQuMzAwOCA0LjMwMDggNC4zIDQuMyAwIDAgMS00LjMwMDgtNC4zMDA4IDQuMyA0LjMg
+			MCAwIDEgNC4zMDA4LTQuMzAwOHoiIGZpbGw9IiNmZmYiIHN0cm9rZS1kYXNob2Zmc2V0PSIxMCIg
+			c3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lk
+			dGg9Ii41IiBzdHlsZT0icGFpbnQtb3JkZXI6bWFya2VycyBzdHJva2UgZmlsbCIvPjwvc3ZnPgo=
+		</icon>
+		<description>Manages the test types and cases of software products</description>
+		<version>1.0</version>
+		<uuid>df0a9dc2-8d93-4e28-91b7-21a6a0e9ec86</uuid>
+	</appinfo>
+	<structure>
+		<table>
+			<uuid>942d02a8-2386-420c-a510-00a3807c3af7</uuid>
+			<columns>
+				<column>
+					<uuid>676f0614-4306-42a9-b963-514624f1774d</uuid>
+					<name>Product</name>
+					<type>text</type>
+					<required>true</required>
+					<default/>
+				</column>
+				<column>
+					<uuid>84979eeb-fb3c-4304-a28f-225d8cfd621e</uuid>
+					<name>Icon</name>
+					<type>file</type>
+					<required>false</required>
+					<default/>
+				</column>
+				<column>
+					<uuid>0317e9e8-1b2c-4e36-958c-01429a0b98c8</uuid>
+					<name>Maintainer</name>
+					<type limit="2">contacts</type>
+					<required>true</required>
+					<default/>
+				</column>
+				<column>
+					<uuid>9f420efa-2d61-4682-adf7-d639d513348c</uuid>
+					<name>State</name>
+					<type>multiple-choice</type>
+					<required>true</required>
+					<default/>
+					<choices>
+						<option>Not test</option>
+						<option>testing</option>
+						<option>Test failed</option>
+						<option>Test succeeded</option>
+					</choices>
+				</column>
+			</columns>
+		</table>
+	</structure>
+
+	<view>
+		<navigation>
+			<headline>
+				<uuid>676f0614-4306-42a9-b963-514624f1774d</uuid>
+			</headline>
+			<icon>
+				<uuid>84979eeb-fb3c-4304-a28f-225d8cfd621e</uuid>
+			</icon>
+		</navigation>
+		<detail>
+			<element>
+				<uuid>84979eeb-fb3c-4304-a28f-225d8cfd621e</uuid>
+			</element>
+			<element>
+				<uuid>676f0614-4306-42a9-b963-514624f1774d</uuid>
+			</element>
+			<element>
+				<uuid>9f420efa-2d61-4682-adf7-d639d513348c</uuid>
+			</element>
+			<element>
+				<uuid>0317e9e8-1b2c-4e36-958c-01429a0b98c8</uuid>
+			</element>
+		</detail>
+	</view>
+</buildapp>

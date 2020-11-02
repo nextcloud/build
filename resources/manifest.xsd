@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:xa="http://www.w3.org/2001/XMLSchema"
+		   elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<!--
+	xmllint lacks https support, rendering imports impossible unless hosting them
+	somewhere without TLS enabled. The SVG xsd is not behind HTTPS, but it fails
+	nevertheless, likely for a timeout since it does not load quickly.
+
+	<xs:include schemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd" />
+	<xs:import namespace="xsvg" schemaLocation="http://www.w3.org/TR/2002/WD-SVG11-20020108/SVG.xsd" />
+	-->
+
+	<xs:element name="buildapp">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="metadata" type="metadata" minOccurs="1"
+							maxOccurs="1"/>
+				<xs:element name="appinfo" type="appinfo" minOccurs="1"
+							maxOccurs="1"/>
+				<xs:element name="structure" type="structure" minOccurs="1"
+							maxOccurs="1"/>
+				<xs:element name="view" type="view" minOccurs="1"
+							maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="metadata">
+		<xs:sequence>
+			<xs:element name="version" type="version" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="created" type="xs:dateTime" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="last-modified" type="xs:dateTime" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="appinfo">
+		<xs:sequence>
+			<xs:element name="name" type="non-empty-string" minOccurs="1"
+						maxOccurs="1"/>
+			<!--<xs:element name="icon" type="svg" minOccurs="0"
+						maxOccurs="1"/>-->
+			<xs:element name="icon" type="non-empty-string" minOccurs="0"
+						maxOccurs="1"/>
+			<xs:element name="description" type="non-empty-string" minOccurs="1"
+						maxOccurs="1"/>
+			<xs:element name="version" type="version" minOccurs="1"
+						maxOccurs="1"/>
+			<xs:element name="uuid" type="non-empty-string" minOccurs="1"
+						maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="structure">
+		<xs:sequence>
+			<!-- in future we might have multi-table apps, for now this is always one -->
+			<xs:element name="table" type="table" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="view">
+		<xs:sequence>
+			<xs:element name="navigation" type="navigationView" minOccurs="1" maxOccurs="1" />
+			<xs:element name="detail" type="detailView" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="navigationView">
+		<xs:annotation>
+			<xs:documentation>
+				All tags will contain a reference to an existing column
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="headline" type="columnRef" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="icon" type="columnRef" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="subline" type="columnRef" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="detailView">
+		<xs:sequence>
+			<xs:element name="element" type="columnRef" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="version">
+		<xs:restriction base="limited-string">
+			<xs:pattern value="[0-9]+(\.[0-9]+){0,2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="limited-string">
+		<xs:restriction base="non-empty-string">
+			<xs:maxLength value="256"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="non-empty-string">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:simpleType name="uuid">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="table">
+		<xs:sequence>
+			<xs:element name="uuid" type="uuid" minOccurs="1" maxOccurs="1" />
+			<xs:element name="columns" type="columns" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="column">
+		<xs:sequence>
+			<xs:element name="uuid" type="uuid" minOccurs="1" maxOccurs="1" />
+			<xs:element name="name" type="non-empty-string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="type" type="datatype" minOccurs="1" maxOccurs="1" />
+			<xs:element name="required" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+			<xs:element name="default" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="choices" type="choices" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="columnRef">
+		<xs:sequence>
+			<xs:element name="uuid" type="uuid" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="columns">
+		<xs:sequence>
+			<xs:element name="column" type="column" minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="choices">
+		<xs:sequence>
+			<xs:element name="option" type="non-empty-string" minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="datatype-enumeration">
+		<xs:restriction base="non-empty-string">
+			<xs:enumeration value="checkbox"/>
+			<xs:enumeration value="multiple-choice"/>
+			<xs:enumeration value="text"/>
+			<xs:enumeration value="number"/>
+			<xs:enumeration value="date"/>
+			<xs:enumeration value="uri"/>
+			<xs:enumeration value="contacts"/>
+			<xs:enumeration value="users"/>
+			<xs:enumeration value="file"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="datatype">
+		<xs:simpleContent>
+			<xs:extension base="datatype-enumeration">
+				<xs:attribute name="limit" type="xs:integer" default="1" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+</xs:schema>
