@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <id>build</id>
@@ -13,14 +13,14 @@
 	<author mail="skjnldsv@protonmail.com">skjnldsv></author>
 
     <namespace>Build</namespace>
+	<documentation>
+		<admin>https://github.com/nextcloud/build/blob/master/README.md</admin>
+	</documentation>
     <category>tools</category>
 
     <website>https://github.com/nextcloud/build</website>
     <bugs>https://github.com/nextcloud/build/issues</bugs>
     <repository type="git">https://github.com/nextcloud/build</repository>
-    <documentation>
-        <admin>https://github.com/nextcloud/build/blob/master/README.md</admin>
-    </documentation>
 
     <dependencies>
         <nextcloud min-version="20" max-version="21"/>

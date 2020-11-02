@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright (c] 2017 Vinzenz Rosenkranz <vinzenz.rosenkranz@gmail.com>
  *
@@ -6,6 +8,7 @@
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Jonas Rittershofer <jotoeri@users.noreply.github.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -59,5 +62,35 @@ return [
 
 		['name' => 'api#insertSubmission', 'url' => '/api/v1/submission/insert', 'verb' => 'POST'],
 		['name' => 'api#deleteSubmission', 'url' => '/api/v1/submission/{id}', 'verb' => 'DELETE'],
+		[
+			'name' => 'App#create',
+			'url' => '/api/v1/app',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'App#import',
+			'url' => '/api/v1/app/import',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'App#get',
+			'url' => '/api/v1/app/{buildAppId}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'App#export',
+			'url' => '/api/v1/app/export/{buildAppId}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'App#update',
+			'url' => '/api/v1/app/{buildAppId}',
+			'verb' => 'PUT',
+		],
+		[
+			'name' => 'App#delete',
+			'url' => '/api/v1/app/{buildAppId}',
+			'verb' => 'GET',
+		]
 	]
 ];
