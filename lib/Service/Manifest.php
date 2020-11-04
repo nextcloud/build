@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace OCA\Build\Service;
 
 class Manifest {
-
 	public function isValid(string $manifest): bool {
 		$reader = new \XMLReader();
 		return $reader->XML($manifest) && $reader->isValid();
