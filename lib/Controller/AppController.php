@@ -23,10 +23,12 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\Build\Controller\App;
+namespace OCA\Build\Controller;
 
 use OCA\Build\AppInfo\Application;
+use OCA\Build\Service\AppService;
 use OCA\Build\Service\Manifest;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
@@ -34,21 +36,42 @@ use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use function array_walk;
 
 class AppController extends OCSController {
 
 	/** @var Manifest */
 	private $manifestService;
+	/** @var AppService */
+	private $appService;
 
-	public function __construct(IRequest $request, Manifest $manifestService) {
+	public function __construct(IRequest $request, Manifest $manifestService, AppService $appService) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->manifestService = $manifestService;
+		$this->appService = $appService;
 	}
 
 	public function create(array $appData = null): Response {
-		// FIXME: pseudo code
+		$buildApp = $this->appService->newApp();
+
+		try {
+			array_walk($appData, function ($value, $key) use ($buildApp) {
+				if ($key === 'id') {
+					return;
+				}
+				$setter = 'set' . ucfirst($key);
+				$buildApp->$setter($value);
+			});
+		} catch (\InvalidArgumentException $e) {
+			$response = new DataResponse(['error' => $e->getMessage()]);
+			$response->setStatus(Http::STATUS_BAD_REQUEST);
+			return $response;
+		}
+
+		$buildApp = $this->appService->save($buildApp);
+
 		// perhaps also return app data
-		return new DataResponse(['buildAppId' => 23]);
+		return new DataResponse(['buildAppId' => $buildApp->getId()]);
 	}
 
 	public function import(string $manifest): Response {
@@ -66,19 +89,16 @@ class AppController extends OCSController {
 		return $response;
 	}
 
-	public function get(int $buildAppId): Response {
-		// FIXME: pseudo code
-		if (!in_array($buildAppId, [23, 42])) {
+	public function get(string $buildAppId): Response {
+		try {
+			$buildApp = $this->appService->get($buildAppId);
+		} catch (DoesNotExistException $e) {
 			return new NotFoundResponse();
 		}
 
-		// fetch real app data
-		$appData = [
-			'buildAppId' => $buildAppId,
-			'appName' => 'Dummy App ' . $buildAppId,
-		];
+		//FIXME: this is just the meta data. We need also the structure and the views.
 
-		return new JSONResponse($appData);
+		return new JSONResponse($buildApp->asArray());
 	}
 
 	public function export(int $buildAppId): Response {
