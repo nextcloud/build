@@ -28,25 +28,10 @@ namespace OCA\Build\Db;
 /**
  * @method string getName()
  * @method void setName(string $name)
- * @method string getDescription()
- * @method void setDescription(string $description)
- * @method string getVersion()
- * @method void setVersion(string $version)
- * @method int getCreated()
- * @method void setCreated(int $created)
- * @method int getLastModified()
- * @method void setLastModified(int $lastModified)
- */
-class App extends ABuildEntity {
+ * @method string getAppUuid()
+ * @method void setAppUuid(string $uuid)
+ **/
+class Table extends ABuildEntity {
 	protected $name;
-	protected $description;
-	protected $version;
-	protected $created;
-	protected $lastModified;
-
-	public function __construct() {
-		parent::__construct();
-		$this->addType('created', 'integer');
-		$this->addType('lastModified', 'integer');
-	}
+	protected $appUuid;
 }

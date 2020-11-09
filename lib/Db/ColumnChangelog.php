@@ -26,27 +26,31 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getName()
- * @method void setName(string $name)
- * @method string getDescription()
- * @method void setDescription(string $description)
- * @method string getVersion()
- * @method void setVersion(string $version)
- * @method int getCreated()
- * @method void setCreated(int $created)
- * @method int getLastModified()
- * @method void setLastModified(int $lastModified)
+ * @method string getValueUuid()
+ * @method void setValueUuid(string $uuid)
+ * @method string getEditorType()
+ * @method void setEditorType(string $editorType)
+ * @method string getEditorId()
+ * @method void setEditorId(string $editorId)
+ * @method string getOldValue()
+ * @method void setOldValue(string $value)
+ * @method string getNewValue()
+ * @method void setNewValue(string $value)
+ * @method int getMtime()
+ * @method void setMtime(int $mtime)
  */
-class App extends ABuildEntity {
-	protected $name;
-	protected $description;
-	protected $version;
-	protected $created;
-	protected $lastModified;
+class ColumnChangelog extends ABuildEntity {
+	protected $valueUuid;
+	protected $editorType;
+	protected $editorId;
+	protected $oldValue;
+	protected $newValue;
+	protected $mtime;
 
 	public function __construct() {
 		parent::__construct();
-		$this->addType('created', 'integer');
-		$this->addType('lastModified', 'integer');
+		$this->addType('oldValue', 'text');
+		$this->addType('newValue', 'text');
+		$this->addType('mtime', 'integer');
 	}
 }

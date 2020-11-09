@@ -25,34 +25,10 @@ declare(strict_types=1);
 
 namespace OCA\Build\Db;
 
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\MultipleObjectsReturnedException;
-use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
-class AppMapper extends QBMapper {
-
+class AppMapper extends ABuildMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'build_apps', App::class);
-	}
-
-	/**
-	 * @throws DoesNotExistException
-	 * @throws MultipleObjectsReturnedException
-	 */
-	public function findByUuid(string $uuid): App {
-		$qb = $this->db->getQueryBuilder();
-
-		$qb->select('*')
-			->from($this->getTableName())
-			->where(
-				$qb->expr()->eq('id', $qb->createNamedParameter($uuid))
-			);
-
-		$entity = $this->mapRowToEntity($this->findOneQuery($qb));
-		if ($entity instanceof App) {
-			return $entity;
-		}
-		throw new DoesNotExistException('Expected App but got ' . get_class($entity));
 	}
 }

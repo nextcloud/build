@@ -105,11 +105,6 @@ class Version010000Date20201102190317 extends SimpleMigrationStep {
 			$table->addColumn('default', Types::TEXT, [
 				'notnull' => false,
 			]);
-			$table->addColumn('options_id', Types::STRING, [
-				'notnull' => false,
-				'length' => '36',
-				'fixed' => true,
-			]);
 
 			$table->setPrimaryKey(['id']);
 		}
@@ -193,11 +188,11 @@ class Version010000Date20201102190317 extends SimpleMigrationStep {
 				'notnull' => true,
 				'length' => '128',
 			]);
-			$table->addColumn('key', Types::STRING, [
+			$table->addColumn('config_key', Types::STRING, [
 				'notnull' => true,
 				'length' => '128',
 			]);
-			$table->addColumn('val', Types::TEXT, [
+			$table->addColumn('config_value', Types::TEXT, [
 				'notnull' => false,
 			]);
 

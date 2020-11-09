@@ -25,28 +25,27 @@ declare(strict_types=1);
 
 namespace OCA\Build\Db;
 
-/**
- * @method string getName()
- * @method void setName(string $name)
- * @method string getDescription()
- * @method void setDescription(string $description)
- * @method string getVersion()
- * @method void setVersion(string $version)
- * @method int getCreated()
- * @method void setCreated(int $created)
- * @method int getLastModified()
- * @method void setLastModified(int $lastModified)
- */
-class App extends ABuildEntity {
-	protected $name;
-	protected $description;
-	protected $version;
-	protected $created;
-	protected $lastModified;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\Entity;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\AppFramework\Db\QBMapper;
 
-	public function __construct() {
-		parent::__construct();
-		$this->addType('created', 'integer');
-		$this->addType('lastModified', 'integer');
+class ABuildMapper extends QBMapper {
+
+	/**
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public function findByUuid(string $uuid): Entity {
+		$qb = $this->db->getQueryBuilder();
+
+		$qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('id', $qb->createNamedParameter($uuid))
+			);
+
+		$entity = $this->mapRowToEntity($this->findOneQuery($qb));
+		return $entity;
 	}
 }

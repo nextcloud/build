@@ -89,16 +89,18 @@ class AppController extends OCSController {
 		return $response;
 	}
 
-	public function get(string $buildAppId): Response {
+	public function get(string $uuid): Response {
 		try {
-			$buildApp = $this->appService->get($buildAppId);
+			$buildApp = $this->appService->get($uuid);
 		} catch (DoesNotExistException $e) {
 			return new NotFoundResponse();
 		}
 
 		//FIXME: this is just the meta data. We need also the structure and the views.
 
-		return new JSONResponse($buildApp->asArray());
+		return new JSONResponse([
+			'metadata' => $buildApp->asArray(),
+		]);
 	}
 
 	public function export(int $buildAppId): Response {

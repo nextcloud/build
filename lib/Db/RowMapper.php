@@ -25,28 +25,10 @@ declare(strict_types=1);
 
 namespace OCA\Build\Db;
 
-/**
- * @method string getName()
- * @method void setName(string $name)
- * @method string getDescription()
- * @method void setDescription(string $description)
- * @method string getVersion()
- * @method void setVersion(string $version)
- * @method int getCreated()
- * @method void setCreated(int $created)
- * @method int getLastModified()
- * @method void setLastModified(int $lastModified)
- */
-class App extends ABuildEntity {
-	protected $name;
-	protected $description;
-	protected $version;
-	protected $created;
-	protected $lastModified;
+use OCP\IDBConnection;
 
-	public function __construct() {
-		parent::__construct();
-		$this->addType('created', 'integer');
-		$this->addType('lastModified', 'integer');
+class RowMapper extends ABuildMapper {
+	public function __construct(IDBConnection $db) {
+		parent::__construct($db, 'build_rows', App::class);
 	}
 }

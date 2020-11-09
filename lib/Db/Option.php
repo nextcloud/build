@@ -1,11 +1,10 @@
 <?php
 
 declare(strict_types=1);
-
 /**
- * @copyright Copyright (c) 2019 Inigo Jiron <ijiron@terpmail.umd.edu>
+ * @copyright Copyright (c) 2020 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
- * @author Jonas Rittershofer <jotoeri@users.noreply.github.com>
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,40 +19,28 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\Build\Db;
 
-use OCP\AppFramework\Db\Entity;
-
 /**
- * @method integer getQuestionId()
- * @method void setQuestionId(integer $value)
- * @method string getText()
- * @method void setText(string $value)
+ * @method string getColDefUuid()
+ * @method void setColDefUuid(string $uuid)
+ * @method string getVal()
+ * @method void setVal(string $value)
+ * @method int getOrder()
+ * @method void setOrder(int $order)
  */
-class Option extends Entity {
+class Option extends ABuildEntity {
+	protected $id;
+	protected $colDefUuid;
+	protected $value;
+	protected $order;
 
-	/** @var int */
-	protected $questionId;
-	/** @var string */
-	protected $text;
-
-	/**
-	 * Option constructor.
-	 */
 	public function __construct() {
-		$this->addType('questionId', 'integer');
-		$this->addType('text', 'string');
-	}
-
-	public function read(): array {
-		return [
-			'id' => $this->getId(),
-			'questionId' => $this->getQuestionId(),
-			'text' => htmlspecialchars_decode($this->getText()),
-		];
+		parent::__construct();
+		$this->addType('order', 'integer');
 	}
 }

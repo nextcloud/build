@@ -26,27 +26,30 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
+ * @method string getAppUuid()
+ * @method void setAppUuid(string $uuid)
+ * @method string getTableUuid()
+ * @method void setTableUuid(string $uuid)
  * @method string getName()
  * @method void setName(string $name)
- * @method string getDescription()
- * @method void setDescription(string $description)
- * @method string getVersion()
- * @method void setVersion(string $version)
- * @method int getCreated()
- * @method void setCreated(int $created)
- * @method int getLastModified()
- * @method void setLastModified(int $lastModified)
+ * @method string getDatatype()
+ * @method void setDatatype(string $datatype)
+ * @method bool getMandatory()
+ * @method void setMandatory(bool $mandatory)
+ * @method string getDefault()
+ * @method void setDefault(string $default)
  */
-class App extends ABuildEntity {
+class Column extends ABuildEntity {
+	protected $id;
+	protected $appUuid;
+	protected $tableUuid;
 	protected $name;
-	protected $description;
-	protected $version;
-	protected $created;
-	protected $lastModified;
+	protected $datatype;
+	protected $mandatory;
+	protected $default;
 
 	public function __construct() {
 		parent::__construct();
-		$this->addType('created', 'integer');
-		$this->addType('lastModified', 'integer');
+		$this->addType('mandatory', 'bool');
 	}
 }

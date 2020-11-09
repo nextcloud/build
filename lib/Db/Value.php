@@ -26,27 +26,20 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getName()
- * @method void setName(string $name)
- * @method string getDescription()
- * @method void setDescription(string $description)
- * @method string getVersion()
- * @method void setVersion(string $version)
- * @method int getCreated()
- * @method void setCreated(int $created)
- * @method int getLastModified()
- * @method void setLastModified(int $lastModified)
+ * @method string getRowUuid()
+ * @method void setRowUuid(string $uuid)
+ * @method string getColUuid()
+ * @method void setColUuid(string $uuid)
+ * @method string getVal()
+ * @method void setVal(string $value)
  */
-class App extends ABuildEntity {
-	protected $name;
-	protected $description;
-	protected $version;
-	protected $created;
-	protected $lastModified;
+class Value extends ABuildEntity {
+	protected $rowUuid;
+	protected $colUuid;
+	protected $val;
 
 	public function __construct() {
 		parent::__construct();
-		$this->addType('created', 'integer');
-		$this->addType('lastModified', 'integer');
+		$this->addType('val', 'text');
 	}
 }
