@@ -25,10 +25,24 @@ declare(strict_types=1);
 
 namespace OCA\Build\Db;
 
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IDBConnection;
 
 class AppMapper extends ABuildMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'build_apps', App::class);
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public function findByUuid(string $uuid): App {
+		$app = parent::_findByUuid($uuid);
+		if ($app instanceof App) {
+			return $app;
+		}
+		throw new DoesNotExistException('App does not exist on DB');
 	}
 }

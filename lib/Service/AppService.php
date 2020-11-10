@@ -27,16 +27,43 @@ namespace OCA\Build\Service;
 
 use OCA\Build\Db\App;
 use OCA\Build\Db\AppMapper;
+use OCA\Build\Db\ColumnMapper;
+use OCA\Build\Db\OptionMapper;
+use OCA\Build\Db\TableMappper;
+use OCA\Build\Db\ViewConfigurationMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\IDBConnection;
 use Ramsey\Uuid\Uuid;
 
 class AppService {
 	/** @var AppMapper */
-	private $mapper;
+	private $appMapper;
+	/** @var IDBConnection */
+	private $dbc;
+	/** @var TableMappper */
+	private $tableMapper;
+	/** @var ColumnMapper */
+	private $columnMapper;
+	/** @var ViewConfigurationMapper */
+	private $viewConfigurationMapper;
+	/** @var OptionMapper */
+	private $optionMapper;
 
-	public function __construct(AppMapper $mapper) {
-		$this->mapper = $mapper;
+	public function __construct(
+		IDBConnection $dbc,
+		AppMapper $appMapper,
+		TableMappper $tableMapper,
+		ColumnMapper $columnMapper,
+		ViewConfigurationMapper $viewConfigurationMapper,
+		OptionMapper $optionMapper
+	) {
+		$this->dbc = $dbc;
+		$this->appMapper = $appMapper;
+		$this->tableMapper = $tableMapper;
+		$this->columnMapper = $columnMapper;
+		$this->viewConfigurationMapper = $viewConfigurationMapper;
+		$this->optionMapper = $optionMapper;
 	}
 
 	public function newApp(): App {
@@ -51,8 +78,41 @@ class AppService {
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function get(string $uuid): App {
-		return $this->mapper->findByUuid($uuid);
+	public function getApp(string $uuid): App {
+		return $this->appMapper->findByUuid($uuid);
+	}
+
+	public function getStructure(string $uuid): array {
+		$structure = [];
+
+		$tables = $this->tableMapper->findTablesOfAppByUuid($uuid);
+		foreach ($tables as $table) {
+			$structure[$table->getId()] = $table->asArray();
+			$structure[$table->getId()]['columns'] = [];
+		}
+
+		$columns = $this->columnMapper->findColumnsOfAppByUuid($uuid);
+		foreach ($columns as $column) {
+			$structure[$column->getTableUuid()]['columns'][$column->getId()] = $column->asArray();
+			if ($column->getDatatype() === 'multiple-choice') {
+				$options = $this->optionMapper->findOptionsForColumnByUuid($column->getId());
+				$structure[$column->getTableUuid()]['columns'][$column->getId()]['options'] = [];
+				foreach ($options as $option) {
+					$structure[$column->getTableUuid()]['columns'][$column->getId()]['options'][] = $option->asArray();
+				}
+			}
+		}
+
+		return $structure;
+	}
+
+	public function getViews(string $uuid): array {
+		$result = [];
+		$views = $this->viewConfigurationMapper->findViewsOfAppByUuid($uuid);
+		foreach ($views as $view) {
+			$result[$view->getId()] = $view->asArray();
+		}
+		return $result;
 	}
 
 	public function save(App $app): App {

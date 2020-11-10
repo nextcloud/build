@@ -31,4 +31,11 @@ class TableMappper extends ABuildMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'build_tables', App::class);
 	}
+
+	/**
+	 * @return Table[]
+	 */
+	public function findTablesOfAppByUuid(string $uuid): array {
+		return $this->findEntities($this->getFindEntitiesByAppUuidQuery($uuid));
+	}
 }

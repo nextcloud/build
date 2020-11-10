@@ -31,4 +31,11 @@ class ViewConfigurationMapper extends ABuildMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'build_view_configuration', App::class);
 	}
+
+	/**
+	 * @return ViewConfiguration[]
+	 */
+	public function findViewsOfAppByUuid(string $uuid): array {
+		return $this->findEntities($this->getFindEntitiesByAppUuidQuery($uuid));
+	}
 }

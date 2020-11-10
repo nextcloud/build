@@ -29,6 +29,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 
 class ABuildMapper extends QBMapper {
 
@@ -36,7 +37,7 @@ class ABuildMapper extends QBMapper {
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function findByUuid(string $uuid): Entity {
+	protected function _findByUuid(string $uuid): Entity {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -47,5 +48,21 @@ class ABuildMapper extends QBMapper {
 
 		$entity = $this->mapRowToEntity($this->findOneQuery($qb));
 		return $entity;
+	}
+
+	protected function getFindEntitiesByAppUuidQuery(string $uuid): IQueryBuilder {
+		return $this->getFindEntitiesBySomeUuid('id', $uuid);
+	}
+
+	protected function getFindEntitiesBySomeUuid(string $column, string $uuid): IQueryBuilder {
+		// FIXME: ensure $column exists as property
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq($column, $qb->createNamedParameter($uuid))
+			);
+
+		return $qb;
 	}
 }

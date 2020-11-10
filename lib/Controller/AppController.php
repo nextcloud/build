@@ -91,15 +91,20 @@ class AppController extends OCSController {
 
 	public function get(string $uuid): Response {
 		try {
-			$buildApp = $this->appService->get($uuid);
+			$buildApp = $this->appService->getApp($uuid);
+			$appStructure = $this->appService->getStructure($uuid);
+			$views = $this->appService->getViews($uuid);
 		} catch (DoesNotExistException $e) {
 			return new NotFoundResponse();
 		}
 
-		//FIXME: this is just the meta data. We need also the structure and the views.
+		//FIXME: consistency: buildApp returns the entity, but
+		// getStructure and getViews returns everything as array.
 
 		return new JSONResponse([
 			'metadata' => $buildApp->asArray(),
+			'structure' => $appStructure,
+			'views' => $views,
 		]);
 	}
 

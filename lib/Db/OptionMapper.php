@@ -31,4 +31,11 @@ class OptionMapper extends ABuildMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'build_options', App::class);
 	}
+
+	/**
+	 * @return Option[]
+	 */
+	public function findOptionsForColumnByUuid(string $uuid): array {
+		return $this->findEntities($this->getFindEntitiesBySomeUuid('col_def_uuid', $uuid));
+	}
 }

@@ -31,4 +31,14 @@ class ColumnMapper extends ABuildMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'build_column_definitions', App::class);
 	}
+
+	/**
+	 * @return Column[]
+	 */
+	public function findColumnsOfAppByUuid(string $uuid): array {
+		$qb = $this->getFindEntitiesByAppUuidQuery($uuid);
+		$qb->orderBy('table_uuid', 'asc');
+
+		return $this->findEntities($qb);
+	}
 }
