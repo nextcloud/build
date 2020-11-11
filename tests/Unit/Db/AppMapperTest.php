@@ -48,6 +48,8 @@ class AppMapperTest extends TestCase {
 		$app = new App();
 		$app->setId('525082f9-747d-4818-b6f9-30e8434ee89e');
 		$this->mapper->delete($app);
+
+		parent::tearDown();
 	}
 
 	public function appProvider() {

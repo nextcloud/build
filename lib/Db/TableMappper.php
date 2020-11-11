@@ -25,11 +25,18 @@ declare(strict_types=1);
 
 namespace OCA\Build\Db;
 
+use OCP\AppFramework\Db\Entity;
 use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 
 class TableMappper extends ABuildMapper {
-	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'build_tables', App::class);
+	/** @var LoggerInterface */
+	private $logger;
+
+	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+		parent::__construct($db, 'build_tables', Table::class);
+		$this->logger = $logger;
 	}
 
 	/**
@@ -37,5 +44,56 @@ class TableMappper extends ABuildMapper {
 	 */
 	public function findTablesOfAppByUuid(string $uuid): array {
 		return $this->findEntities($this->getFindEntitiesByAppUuidQuery($uuid));
+	}
+
+	public function deleteByAppUuid(string $appUuid): bool {
+		$cleanDelete = true;
+		$tables = $this->findTablesOfAppByUuid($appUuid);
+		foreach ($tables as $table) {
+			try {
+				$this->delete($table);
+			} catch (\Exception $e) {
+				$cleanDelete = false;
+				$this->logger->warning(
+					'Could not delete row from {table} with id {id}',
+					[
+						'app' => 'build',
+						'table' => $this->getTableName(),
+						'id' => $table->getId()
+					]
+				);
+			}
+		}
+		return $cleanDelete;
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	public function insert(Entity $entity): Entity {
+		$this->preInsertCheck($entity);
+		return parent::insert($entity);
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	public function insertOrUpdate(Entity $entity): Entity {
+		$this->preInsertCheck($entity);
+		return parent::insertOrUpdate($entity);
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	protected function preInsertCheck(Entity $table): void {
+		if (!$table instanceof Table) {
+			throw new \InvalidArgumentException('Table expected, but got ' . get_class($table));
+		}
+		if (empty($table->getId())) {
+			/** @noinspection PhpStrictTypeCheckingInspection */
+			// overridden virtual method
+			$table->setId(Uuid::uuid4()->toString());
+		}
 	}
 }

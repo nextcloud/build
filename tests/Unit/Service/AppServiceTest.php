@@ -29,6 +29,7 @@ use OCA\Build\Db\App;
 use OCA\Build\Db\AppMapper;
 use OCA\Build\Db\ColumnMapper;
 use OCA\Build\Db\OptionMapper;
+use OCA\Build\Db\Table;
 use OCA\Build\Db\TableMappper;
 use OCA\Build\Db\ViewConfigurationMapper;
 use OCA\Build\Service\AppService;
@@ -85,11 +86,34 @@ class AppServiceTest extends TestCase {
 		$this->assertSame($appMock, $app);
 	}
 
-	public function testGetStructureNotFound() {
+	public function testGetStructureTableNotFound() {
 		$uuid = '8d2d7771-4bc9-4c17-a446-72717fb931d7';
 
 		$this->tableMapper->expects($this->once())
 			->method('findTablesOfAppByUuid')
+			->with($uuid)
+			->willThrowException(new DoesNotExistException('I looked everywhere, but it is not here'));
+
+		$this->expectException(DoesNotExistException::class);
+		$this->service->getStructure($uuid);
+	}
+
+	public function testGetStructureColumnNotFound() {
+		$uuid = '8d2d7771-4bc9-4c17-a446-72717fb931d7';
+		$tableUuid = 'd0d957ba-8ffc-46da-aca7-470828c9425e';
+
+		$table = new Table();
+		$table->setName('Main');
+		$table->setId($tableUuid);
+		$table->setAppId($uuid);
+
+		$this->tableMapper->expects($this->once())
+			->method('findTablesOfAppByUuid')
+			->with($uuid)
+			->willReturn([$table]);
+
+		$this->columnMapper->expects($this->once())
+			->method('findColumnsOfAppByUuid')
 			->with($uuid)
 			->willThrowException(new DoesNotExistException('I looked everywhere, but it is not here'));
 

@@ -28,10 +28,10 @@ namespace OCA\Build\Db;
 /**
  * @method string getName()
  * @method void setName(string $name)
- * @method string getAppUuid()
- * @method void setAppUuid(string $uuid)
+ * @method string getAppId()
+ * @method void setAppId(string $uuid)
  **/
 class Table extends ABuildEntity {
 	protected $name;
-	protected $appUuid;
+	protected $appId;
 }

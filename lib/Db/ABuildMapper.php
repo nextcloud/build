@@ -51,7 +51,7 @@ class ABuildMapper extends QBMapper {
 	}
 
 	protected function getFindEntitiesByAppUuidQuery(string $uuid): IQueryBuilder {
-		return $this->getFindEntitiesBySomeUuid('id', $uuid);
+		return $this->getFindEntitiesBySomeUuid('app_id', $uuid);
 	}
 
 	protected function getFindEntitiesBySomeUuid(string $column, string $uuid): IQueryBuilder {
