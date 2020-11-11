@@ -25,14 +25,17 @@ declare(strict_types=1);
 
 namespace OCA\Build\Db;
 
-use OCP\AppFramework\Db\Entity;
 use OCP\IDBConnection;
 use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
 
 class TableMappper extends ABuildMapper {
 	public function __construct(IDBConnection $db, LoggerInterface $logger) {
 		parent::__construct($db, $logger, 'build_tables', Table::class);
+	}
+
+	public function deleteByAppUuid(string $appUuid): bool {
+		$tables = $this->findTablesOfAppByUuid($appUuid);
+		return parent::_deleteByAppUuid($appUuid, $tables);
 	}
 
 	/**
@@ -40,10 +43,5 @@ class TableMappper extends ABuildMapper {
 	 */
 	public function findTablesOfAppByUuid(string $uuid): array {
 		return $this->findEntities($this->getFindEntitiesByAppUuidQuery($uuid));
-	}
-
-	public function deleteByAppUuid(string $appUuid): bool {
-		$tables = $this->findTablesOfAppByUuid($appUuid);
-		return  parent::_deleteByAppUuid($appUuid, $tables);
 	}
 }

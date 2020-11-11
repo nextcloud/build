@@ -73,5 +73,4 @@ class AppMapper extends ABuildMapper {
 		$this->preModifyCheck($entity);
 		return parent::update($entity);
 	}
-
 }

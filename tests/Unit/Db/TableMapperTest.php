@@ -36,12 +36,12 @@ use Test\TestCase;
  * @group DB
  */
 class TableMapperTest extends TestCase {
+	/** @var string */
+	protected const APP_UUID = 'f5e968bf-3dff-47ea-9730-9aab5a983aa2';
 	/** @var IDBConnection */
 	protected $dbc;
 	/** @var TableMappper */
 	protected $mapper;
-	/** @var string */
-	protected const APP_UUID = 'f5e968bf-3dff-47ea-9730-9aab5a983aa2';
 	/** @var \PHPUnit\Framework\MockObject\MockObject|LoggerInterface */
 	protected $logger;
 
@@ -106,5 +106,4 @@ class TableMapperTest extends TestCase {
 			$this->assertSame(self::APP_UUID, $foundTable->getAppId());
 		}
 	}
-
 }
