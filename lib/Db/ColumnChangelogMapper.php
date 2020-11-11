@@ -26,9 +26,10 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
 
 class ColumnChangelogMapper extends ABuildMapper {
-	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'build_column_changelog', App::class);
+	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+		parent::__construct($db, $logger, 'build_column_changelog', ColumnChangelog::class);
 	}
 }

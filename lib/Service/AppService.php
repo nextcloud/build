@@ -93,12 +93,12 @@ class AppService {
 
 		$columns = $this->columnMapper->findColumnsOfAppByUuid($uuid);
 		foreach ($columns as $column) {
-			$structure[$column->getTableUuid()]['columns'][$column->getId()] = $column->asArray();
+			$structure[$column->getTableId()]['columns'][$column->getId()] = $column->asArray();
 			if ($column->getDatatype() === 'multiple-choice') {
 				$options = $this->optionMapper->findOptionsForColumnByUuid($column->getId());
-				$structure[$column->getTableUuid()]['columns'][$column->getId()]['options'] = [];
+				$structure[$column->getTableId()]['columns'][$column->getId()]['options'] = [];
 				foreach ($options as $option) {
-					$structure[$column->getTableUuid()]['columns'][$column->getId()]['options'][] = $option->asArray();
+					$structure[$column->getTableId()]['columns'][$column->getId()]['options'][] = $option->asArray();
 				}
 			}
 		}
@@ -115,8 +115,21 @@ class AppService {
 		return $result;
 	}
 
+	public function getAppData(string $uuid) {
+		$query = $this->dbc->getQueryBuilder();
+		$query->select('*')
+			->from($this->appMapper->getTableName(), 'metadata')
+			->leftJoin('metadata', $this->tableMapper->getTableName(), 'apptable', $query->expr()->eq('metadata.uuid', 'apptable.app_uuid'))
+			->leftJoin('metadata', $this->columnMapper->getTableName(), 'columns', $query->expr()->eq('metatada.uuid', 'columns.app_uuid'))
+			->leftJoin('metadata', $this->viewConfigurationMapper->getTableName(), 'appviews', $query->expr()->eq('metadata.uuid', 'appviews.app_uuid'))
+			->where($query->expr()->eq('metadata.uuid', $query->createNamedParameter($uuid)));
+		$stmt = $query->execute();
+		$appData = $stmt->fetchAll();
+		$stmt->closeCursor();
+	}
+
 	public function save(App $app): App {
-		$entity = $this->mapper->insertOrUpdate($app);
+		$entity = $this->appMapper->insertOrUpdate($app);
 		if ($entity instanceof App) {
 			return $entity;
 		}

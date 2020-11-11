@@ -26,16 +26,15 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getColDefUuid()
- * @method void setColDefUuid(string $uuid)
+ * @method string getColDefId()
+ * @method void setColDefId(string $uuid)
  * @method string getVal()
  * @method void setVal(string $value)
  * @method int getOrder()
  * @method void setOrder(int $order)
  */
 class Option extends ABuildEntity {
-	protected $id;
-	protected $colDefUuid;
+	protected $colDefId;
 	protected $value;
 	protected $order;
 

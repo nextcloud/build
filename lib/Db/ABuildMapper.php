@@ -30,8 +30,57 @@ use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 
-class ABuildMapper extends QBMapper {
+abstract class ABuildMapper extends QBMapper {
+
+	/** @var LoggerInterface */
+	private $logger;
+
+	public function __construct(
+		IDBConnection $db,
+		LoggerInterface $logger,
+		string $tableName,
+		string $entityClass = null
+	) {
+		$this->logger = $logger;
+		parent::__construct($db, $tableName, $entityClass);
+	}
+
+	public function insert(Entity $entity): Entity {
+		$this->preInsertCheck($entity);
+		return parent::insert($entity);
+	}
+
+	public function insertOrUpdate(Entity $entity): Entity {
+		$this->preInsertCheck($entity);
+		return parent::insertOrUpdate($entity);
+	}
+
+	/**
+	 * deletes entity rows by comporing app_id against the provided UUID
+	 */
+	protected function _deleteByAppUuid(string $appUuid, array $entities): bool {
+		$cleanDelete = true;
+		foreach ($entities as $entity) {
+			try {
+				$this->delete($entity);
+			} catch (\Exception $e) {
+				$cleanDelete = false;
+				$this->logger->warning(
+					'Could not delete row from {table} with id {id}',
+					[
+						'app' => 'build',
+						'table' => $this->getTableName(),
+						'id' => $entity->getId()
+					]
+				);
+			}
+		}
+		return $cleanDelete;
+	}
 
 	/**
 	 * @throws DoesNotExistException
@@ -64,5 +113,16 @@ class ABuildMapper extends QBMapper {
 			);
 
 		return $qb;
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	protected function preInsertCheck(Entity $entity): void {
+		if (empty($entity->getId())) {
+			/** @noinspection PhpStrictTypeCheckingInspection */
+			// overridden virtual method
+			$entity->setId(Uuid::uuid4()->toString());
+		}
 	}
 }

@@ -27,6 +27,7 @@ namespace OCA\Build\Test\Service;
 
 use OCA\Build\Db\App;
 use OCA\Build\Db\AppMapper;
+use OCA\Build\Db\Column;
 use OCA\Build\Db\ColumnMapper;
 use OCA\Build\Db\OptionMapper;
 use OCA\Build\Db\Table;
@@ -119,6 +120,59 @@ class AppServiceTest extends TestCase {
 
 		$this->expectException(DoesNotExistException::class);
 		$this->service->getStructure($uuid);
+	}
+
+	public function testGetStructure() {
+		$uuid = '8d2d7771-4bc9-4c17-a446-72717fb931d7';
+		$tableUuid = 'd0d957ba-8ffc-46da-aca7-470828c9425e';
+		$colUuids = [
+			'3868e332-0053-4c4c-a988-352470df089f',
+			'6be3b017-092c-4fb0-9b0d-fddb2f65916d',
+			'fca8c0dc-b68b-4e30-95c7-68823462491d',
+		];
+
+		$table = new Table();
+		$table->setName('Main');
+		$table->setId($tableUuid);
+		$table->setAppId($uuid);
+
+		$column1 = new Column();
+		$column1->setName('Ship name');
+		$column1->setAppId($uuid);
+		$column1->setDatatype('string');
+		$column1->setMandatory(true);
+		$column1->setTableId($tableUuid);
+		$column1->setId($colUuids[0]);
+		$column2 = clone $column1;
+		$column2->setName('Captain');
+		$column2->setDatatype('contacts');
+		$column2->setId($colUuids[1]);
+		$column3 = clone $column1;
+		$column3->setName('Launching');
+		$column3->setDatatype('integer');
+		$column3->setId($colUuids[2]);
+
+		$this->tableMapper->expects($this->once())
+			->method('findTablesOfAppByUuid')
+			->with($uuid)
+			->willReturn([$table]);
+
+		$this->columnMapper->expects($this->once())
+			->method('findColumnsOfAppByUuid')
+			->with($uuid)
+			->willReturn([$column1, $column2, $column3]);
+
+		$structure = $this->service->getStructure($uuid);
+		$this->assertArrayHasKey($tableUuid, $structure);
+		$this->assertIsArray($structure[$tableUuid]['columns']);
+		foreach ($colUuids as $colUuid) {
+			$this->assertArrayHasKey($colUuid, $structure[$tableUuid]['columns']);
+			$this->assertIsArray($structure[$tableUuid]['columns'][$colUuid]);
+			$this->assertArrayHasKey('name', $structure[$tableUuid]['columns'][$colUuid]);
+			$this->assertNotEmpty($colUuid, $structure[$tableUuid]['columns'][$colUuid]['name']);
+			$this->assertArrayHasKey('datatype', $structure[$tableUuid]['columns'][$colUuid]);
+			$this->assertNotEmpty($colUuid, $structure[$tableUuid]['columns'][$colUuid]['datatype']);
+		}
 	}
 
 	public function testGetViewsNotFound() {

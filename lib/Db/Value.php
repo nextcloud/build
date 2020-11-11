@@ -26,16 +26,16 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getRowUuid()
- * @method void setRowUuid(string $uuid)
- * @method string getColUuid()
- * @method void setColUuid(string $uuid)
+ * @method string getRowId()
+ * @method void setRowId(string $uuid)
+ * @method string getColId()
+ * @method void setColId(string $uuid)
  * @method string getVal()
  * @method void setVal(string $value)
  */
 class Value extends ABuildEntity {
-	protected $rowUuid;
-	protected $colUuid;
+	protected $rowId;
+	protected $colId;
 	protected $val;
 
 	public function __construct() {

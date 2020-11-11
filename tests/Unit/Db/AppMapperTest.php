@@ -28,6 +28,7 @@ namespace OCA\Build\Test\Db;
 use OCA\Build\Db\App;
 use OCA\Build\Db\AppMapper;
 use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 /**
@@ -38,10 +39,13 @@ class AppMapperTest extends TestCase {
 	protected $dbc;
 	/** @var AppMapper */
 	protected $mapper;
+	/** @var \PHPUnit\Framework\MockObject\MockObject|LoggerInterface */
+	protected $logger;
 
 	public function setUp(): void {
 		$this->dbc = \OC::$server->get(IDBConnection::class);
-		$this->mapper = new AppMapper($this->dbc);
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->mapper = new AppMapper($this->dbc, $this->logger);
 	}
 
 	public function tearDown(): void {

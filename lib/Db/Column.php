@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getAppUuid()
- * @method void setAppUuid(string $uuid)
- * @method string getTableUuid()
- * @method void setTableUuid(string $uuid)
+ * @method string getAppId()
+ * @method void setAppId(string $uuid)
+ * @method string getTableId()
+ * @method void setTableId(string $uuid)
  * @method string getName()
  * @method void setName(string $name)
  * @method string getDatatype()
@@ -40,9 +40,8 @@ namespace OCA\Build\Db;
  * @method void setDefault(string $default)
  */
 class Column extends ABuildEntity {
-	protected $id;
-	protected $appUuid;
-	protected $tableUuid;
+	protected $appId;
+	protected $tableId;
 	protected $name;
 	protected $datatype;
 	protected $mandatory;

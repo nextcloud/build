@@ -26,10 +26,9 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getTableUuid()
- * @method void setTableUuid(string $uuid)
+ * @method string getTableId()
+ * @method void setTableId(string $uuid)
  **/
 class Row extends ABuildEntity {
-	protected $id;
-	protected $tableUuid;
+	protected $tableId;
 }

@@ -26,10 +26,11 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
 
 class ColumnMapper extends ABuildMapper {
-	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'build_column_definitions', App::class);
+	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+		parent::__construct($db, $logger, 'build_column_definitions', Column::class);
 	}
 
 	/**
@@ -37,8 +38,13 @@ class ColumnMapper extends ABuildMapper {
 	 */
 	public function findColumnsOfAppByUuid(string $uuid): array {
 		$qb = $this->getFindEntitiesByAppUuidQuery($uuid);
-		$qb->orderBy('table_uuid', 'asc');
+		$qb->orderBy('table_id', 'asc');
 
 		return $this->findEntities($qb);
+	}
+
+	public function deleteByAppUuid(string $appUuid): bool {
+		$columns = $this->findColumnsOfAppByUuid($appUuid);
+		return  parent::_deleteByAppUuid($appUuid, $columns);
 	}
 }

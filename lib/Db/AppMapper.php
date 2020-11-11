@@ -29,10 +29,11 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
 
 class AppMapper extends ABuildMapper {
-	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'build_apps', App::class);
+	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+		parent::__construct($db, $logger, 'build_apps', App::class);
 	}
 
 	/**
@@ -52,16 +53,6 @@ class AppMapper extends ABuildMapper {
 		return parent::insert($entity);
 	}
 
-	public function insertOrUpdate(Entity $entity): Entity {
-		$this->preModifyCheck($entity);
-		return parent::insertOrUpdate($entity);
-	}
-
-	public function update(Entity $entity): Entity {
-		$this->preModifyCheck($entity);
-		return parent::update($entity);
-	}
-
 	protected function preModifyCheck(Entity $app): void {
 		if (!$app instanceof App) {
 			throw new \InvalidArgumentException('App expected, but got ' . get_class($app));
@@ -71,6 +62,16 @@ class AppMapper extends ABuildMapper {
 			$app->setCreated($currentTimestamp);
 		}
 		$app->setLastModified($currentTimestamp);
+	}
+
+	public function insertOrUpdate(Entity $entity): Entity {
+		$this->preModifyCheck($entity);
+		return parent::insertOrUpdate($entity);
+	}
+
+	public function update(Entity $entity): Entity {
+		$this->preModifyCheck($entity);
+		return parent::update($entity);
 	}
 
 }

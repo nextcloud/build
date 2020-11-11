@@ -36,7 +36,7 @@ use Test\TestCase;
  * @group DB
  */
 class TableMapperTest extends TestCase {
-	/** @var mixed|\stdClass */
+	/** @var IDBConnection */
 	protected $dbc;
 	/** @var TableMappper */
 	protected $mapper;

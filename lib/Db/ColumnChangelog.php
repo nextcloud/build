@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getValueUuid()
- * @method void setValueUuid(string $uuid)
+ * @method string getValueId()
+ * @method void setValueId(string $uuid)
  * @method string getEditorType()
  * @method void setEditorType(string $editorType)
  * @method string getEditorId()
@@ -40,7 +40,7 @@ namespace OCA\Build\Db;
  * @method void setMtime(int $mtime)
  */
 class ColumnChangelog extends ABuildEntity {
-	protected $valueUuid;
+	protected $valueId;
 	protected $editorType;
 	protected $editorId;
 	protected $oldValue;

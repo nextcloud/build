@@ -26,9 +26,10 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
 
 class ValueMapper extends ABuildMapper {
-	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'build_values', App::class);
+	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+		parent::__construct($db, $logger, 'build_values', Value::class);
 	}
 }

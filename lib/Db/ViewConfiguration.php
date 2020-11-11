@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getAppUuid()
- * @method void setAppUuid(string $uuid)
+ * @method string getAppId()
+ * @method void setAppId(string $uuid)
  * @method string getViewId()
  * @method void setViewId(string $id)
  * @method string getConfigKey()
@@ -36,7 +36,7 @@ namespace OCA\Build\Db;
  * @method void setConfigValue(string $value)
  */
 class ViewConfiguration extends ABuildEntity {
-	protected $appUuid;
+	protected $appId;
 	protected $viewId;
 	protected $configKey;
 	protected $configValue;

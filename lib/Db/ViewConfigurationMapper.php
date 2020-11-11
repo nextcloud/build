@@ -26,10 +26,11 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
 
 class ViewConfigurationMapper extends ABuildMapper {
-	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'build_view_configuration', App::class);
+	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+		parent::__construct($db, $logger, 'build_view_configuration', ViewConfiguration::class);
 	}
 
 	/**
