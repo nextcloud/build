@@ -82,7 +82,7 @@ class AppMapperTest extends TestCase {
 	 * @dataProvider appProvider
 	 */
 	public function testUpdate(string $uuid, string $name, string $description, string $version) {
-		$yesterday = time() - 24 *  60 * 60;
+		$yesterday = time() - 24 * 60 * 60;
 
 		$app = new App();
 		$app->setId($uuid);
@@ -123,5 +123,27 @@ class AppMapperTest extends TestCase {
 		/** @var App $result2 */
 		$this->assertTrue($result2->getLastModified() > $oldLastModified);
 		$this->assertSame($oldLastCreated, $result2->getCreated());
+	}
+
+	/**
+	 * @dataProvider appProvider
+	 */
+	public function testFindApp(string $uuid, string $name, string $description, string $version) {
+		$app = new App();
+		$app->setId($uuid);
+		$app->setName($name);
+		$app->setDescription($description);
+		$app->setVersion($version);
+
+		$result = $this->mapper->insert($app);
+
+		$foundApp = $this->mapper->findByUuid($uuid);
+		$this->assertInstanceOf(App::class, $result);
+		/** @var App $foundApp */
+		$this->assertNotEmpty($foundApp->getLastModified());
+		$this->assertNotEmpty($foundApp->getCreated());
+		$this->assertSame($name, $foundApp->getName());
+		$this->assertSame($description, $foundApp->getDescription());
+		$this->assertSame($version, $foundApp->getVersion());
 	}
 }
