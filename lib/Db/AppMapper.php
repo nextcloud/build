@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IDBConnection;
 
@@ -45,4 +46,31 @@ class AppMapper extends ABuildMapper {
 		}
 		throw new DoesNotExistException('App does not exist on DB');
 	}
+
+	public function insert(Entity $entity): Entity {
+		$this->preModifyCheck($entity);
+		return parent::insert($entity);
+	}
+
+	public function insertOrUpdate(Entity $entity): Entity {
+		$this->preModifyCheck($entity);
+		return parent::insertOrUpdate($entity);
+	}
+
+	public function update(Entity $entity): Entity {
+		$this->preModifyCheck($entity);
+		return parent::update($entity);
+	}
+
+	protected function preModifyCheck(Entity $app): void {
+		if (!$app instanceof App) {
+			throw new \InvalidArgumentException('App expected, but got ' . get_class($app));
+		}
+		$currentTimestamp = time();
+		if (empty($app->getCreated())) {
+			$app->setCreated($currentTimestamp);
+		}
+		$app->setLastModified($currentTimestamp);
+	}
+
 }

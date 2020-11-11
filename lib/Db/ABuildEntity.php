@@ -40,7 +40,7 @@ use Ramsey\Uuid\Uuid;
  * @method void setId(string $id)
  */
 abstract class ABuildEntity extends Entity {
-	protected $id;
+	public $id;
 
 	public function __construct() {
 		$this->addType('id', 'string');
