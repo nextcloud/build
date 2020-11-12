@@ -19,60 +19,14 @@
   - along with this program. If not, see <http://www.gnu.org/licenses/>.
   -
   -->
-
 <template>
-	<div class="empty-content" role="note">
-		<div class="empty-content__icon" :class="icon" role="img" />
-		<h2 class="empty-content__title">
-			<slot />
-		</h2>
-		<p v-show="$slots.desc" class="empty-content__desc">
-			<slot name="desc" />
-		</p>
-		<div v-show="$slots.action" class="empty-content__action">
-			<slot name="action" />
-		</div>
+	<div>
+
 	</div>
 </template>
 
 <script>
 export default {
-	name: 'EmptyContent',
-
-	props: {
-		icon: {
-			type: String,
-			default: 'icon-forms',
-		},
-	},
+	name: 'ListLayout',
 }
 </script>
-
-<style lang="scss">
-.empty-content {
-	margin-top: 20vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	text-align: center;
-
-	&__icon {
-		width: 64px;
-		height: 64px;
-		margin: 0 auto 15px;
-		opacity: .4;
-		background-size: 64px;
-		background-repeat: no-repeat;
-		background-position: center;
-	}
-
-	&__title {
-		margin-bottom: 8px;
-	}
-
-	&__desc {
-		margin-bottom: 16px;
-	}
-}
-
-</style>

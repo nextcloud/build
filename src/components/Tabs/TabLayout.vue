@@ -21,13 +21,29 @@
   -->
 
 <template>
-	<AppSidebarTab :id="id" :name="name" :icon="icon">
-		Layout
+	<AppSidebarTab :id="id"
+		:name="name"
+		:icon="icon"
+		class="layout">
+		<!-- Home layout style selector -->
+		<ul class="layout__styles">
+			<li v-for="layout in Layouts" :key="layout.id">
+				<button :class="{ [layout.icon]: true,'layout__style--active': isSelected(layout) }"
+					class="layout__style">
+					{{ layout.name }}
+				</button>
+			</li>
+		</ul>
+
+		<!-- Required prop picker for the selected layout -->
 	</AppSidebarTab>
 </template>
 
 <script>
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
+
+import AppMixin from '../../mixins/AppMixin'
+import * as Layouts from '../../models/HomeLayouts'
 
 export default {
 	name: 'TabLayout',
@@ -35,40 +51,28 @@ export default {
 	components: {
 		AppSidebarTab,
 	},
+	mixins: [AppMixin],
+
+	data() {
+		return {
+			Layouts,
+		}
+	},
 
 	computed: {
 		icon: () => 'icon-square-foot',
 		id: () => 'build-layout',
 		name: () => t('build', 'Layout'),
 	},
+
+	methods: {
+		isSelected(layout) {
+			return this.app.layout === layout.id
+		},
+	},
 }
 </script>
 
 <style lang="scss">
-.empty-content {
-	margin-top: 20vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	text-align: center;
-
-	&__icon {
-		width: 64px;
-		height: 64px;
-		margin: 0 auto 15px;
-		opacity: .4;
-		background-size: 64px;
-		background-repeat: no-repeat;
-		background-position: center;
-	}
-
-	&__title {
-		margin-bottom: 8px;
-	}
-
-	&__desc {
-		margin-bottom: 16px;
-	}
-}
 
 </style>

@@ -77,10 +77,10 @@ import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
 import Content from '@nextcloud/vue/dist/Components/Content'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import isMobile from '@nextcloud/vue/src/mixins/isMobile'
 
 import AppNavigationApp from './components/AppNavigationApp'
-import EmptyContent from './components/EmptyContent'
 
 export default {
 	name: 'Designer',
@@ -154,6 +154,8 @@ export default {
 						version: '1.0.0',
 						created: 1604287762,
 						last_modified: 1604487762,
+						homelayout: 'list',
+						detailslayout: 'avatar-header',
 					},
 					{
 						uuid: '2e528a52-c444-4e33-ab79-ecfc96b84a35',
@@ -163,6 +165,8 @@ export default {
 						version: '1.0.0',
 						created: 1604311262,
 						last_modified: 1604387762,
+						homelayout: 'list',
+						detailslayout: 'avatar-header',
 					},
 				]
 				// const response = await axios.get(generateOcsUrl('apps/build/api/v1', 2) + 'build')

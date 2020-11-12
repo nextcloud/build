@@ -20,9 +20,9 @@
   -
   -->
 <template>
-	<div>
+	<li>
 
-	</div>
+	</li>
 </template>
 
 <script>

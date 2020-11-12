@@ -1,4 +1,3 @@
-
 /**
  * @copyright Copyright (c) 2020 John Molakvoæ <skjnldsv@protonmail.com>
  *
@@ -20,28 +19,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ListLayout from '../../components/HomeLayouts/ListLayout'
-
 export default {
-	id: 'list',
-	icon: 'icon-layout-list',
-	name: t('build', 'List'),
-	default: true,
-
-	render: ListLayout,
-
 	props: {
-		title: {
-			type: String,
-			required: true,
-		},
-		subtitle: {
-			type: String,
-			required: false,
-		},
-		image: {
-			type: Image,
-			required: false,
+		list: {
+			type: Array,
+			default: () => [],
 		},
 	},
 }

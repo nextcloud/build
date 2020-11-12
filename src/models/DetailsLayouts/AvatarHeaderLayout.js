@@ -20,15 +20,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ListLayout from '../../components/HomeLayouts/ListLayout'
+import AvatarHeader from '../../components/DetailsLayouts/AvatarHeaderLayout'
 
 export default {
-	id: 'list',
-	icon: 'icon-layout-list',
-	name: t('build', 'List'),
+	id: 'avatar-header',
+	icon: 'icon-layout-avatar-header',
+	name: t('build', 'Avatar header'),
 	default: true,
 
-	render: ListLayout,
+	render: AvatarHeader,
 
 	props: {
 		title: {
