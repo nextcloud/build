@@ -92,20 +92,31 @@ class AppController extends OCSController {
 	public function get(string $uuid): Response {
 		try {
 			$buildApp = $this->appService->getApp($uuid);
-			$appStructure = $this->appService->getStructure($uuid);
-			$views = $this->appService->getViews($uuid);
+			$appData = [
+				'metadata' => $buildApp->asArray(),
+				'structure' => [],
+				'views' => [],
+			];
 		} catch (DoesNotExistException $e) {
 			return new NotFoundResponse();
+		}
+
+		try {
+			$appData['structure'] = $this->appService->getStructure($uuid);
+		} catch (DoesNotExistException $e) {
+			// OK when not configured yet
+		}
+
+		try {
+			$appData['views'] = $this->appService->getViews($uuid);
+		} catch (DoesNotExistException $e) {
+			// OK when not configured yet
 		}
 
 		//FIXME: consistency: buildApp returns the entity, but
 		// getStructure and getViews returns everything as array.
 
-		return new JSONResponse([
-			'metadata' => $buildApp->asArray(),
-			'structure' => $appStructure,
-			'views' => $views,
-		]);
+		return new JSONResponse($appData);
 	}
 
 	public function export(int $uuid): Response {
