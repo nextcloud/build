@@ -71,7 +71,7 @@ class AppController extends OCSController {
 		$buildApp = $this->appService->save($buildApp);
 
 		// perhaps also return app data
-		return new DataResponse(['buildAppId' => $buildApp->getId()]);
+		return new DataResponse(['uuid' => $buildApp->getId()]);
 	}
 
 	public function import(string $manifest): Response {
@@ -85,7 +85,7 @@ class AppController extends OCSController {
 		}
 
 		// perhaps also return app data
-		$response->setData(['buildAppId' => 42]);
+		$response->setData(['uuid' => 42]);
 		return $response;
 	}
 
@@ -108,22 +108,22 @@ class AppController extends OCSController {
 		]);
 	}
 
-	public function export(int $buildAppId): Response {
+	public function export(int $uuid): Response {
 		// FIXME: pseudo code
-		if (!in_array($buildAppId, [23, 42])) {
+		if (!in_array($uuid, [23, 42])) {
 			return new NotFoundResponse();
 		}
 
 		// fetch real app data
 		$appData = [
-			'buildAppId' => $buildAppId,
-			'appName' => 'Dummy App ' . $buildAppId,
+			'uuid' => $uuid,
+			'appName' => 'Dummy App ' . $uuid,
 		];
 
 		return new JSONResponse(['manifest' => $this->manifestService->appDataToXML($appData)]);
 	}
 
-	public function update(int $buildAppId, string $key, string $value) {
+	public function update(int $uuid, string $key, string $value) {
 		// FIXME: pseudo code
 		// check valid id
 		// get app representation
@@ -132,9 +132,9 @@ class AppController extends OCSController {
 		return new Response();
 	}
 
-	public function delete(int $buildAppId) {
+	public function delete(int $uuid) {
 		// FIXME: pseudo code
-		if (!in_array($buildAppId, [23, 42])) {
+		if (!in_array($uuid, [23, 42])) {
 			return new NotFoundResponse();
 		}
 		// delete app definition from DB
