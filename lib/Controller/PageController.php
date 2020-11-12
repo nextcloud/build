@@ -32,12 +32,30 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use OCP\Util;
+use OCP\IInitialStateService;
 
 class PageController extends Controller {
 	private const TEMPLATE_MAIN = 'main';
 
-	public function __construct(IRequest $request) {
+	/** @var IInitialStateService */
+	private $initialStateService;
+
+	/** @var Array
+	 *
+	 * Maximum String lengths, the database is set to store.
+	 */
+	private $maxStringLengths = [
+		'formTitle' => 256,
+		'formDescription' => 8192,
+		'questionText' => 2048,
+		'optionText' => 1024,
+		'answerText' => 4096,
+	];
+
+	public function __construct(IRequest $request,
+								IInitialStateService $initialStateService) {
 		parent::__construct(Application::APP_ID, $request);
+		$this->initialStateService = $initialStateService;
 	}
 
 	/**
@@ -49,6 +67,7 @@ class PageController extends Controller {
 	public function index(): TemplateResponse {
 		Util::addScript(Application::APP_ID, 'build-main');
 		Util::addStyle(Application::APP_ID, 'build');
+		$this->initialStateService->provideInitialState($this->appName, 'maxStringLengths', $this->maxStringLengths);
 
 		return new TemplateResponse(Application::APP_ID, self::TEMPLATE_MAIN);
 	}

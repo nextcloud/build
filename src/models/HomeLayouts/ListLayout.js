@@ -1,3 +1,4 @@
+
 /**
  * @copyright Copyright (c) 2020 John Molakvoæ <skjnldsv@protonmail.com>
  *
@@ -17,15 +18,27 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
- 
-#header .header-shared-by  {
-	color: var(--color-primary-text);
-	position: relative;
-	font-weight: 300;
-	font-size: 11px;
-	line-height: 11px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+
+import ListItem from '../../components/Layouts/ListItem'
+
+export default {
+	icon: 'icon-layout-list',
+	name: t('build', 'List'),
+	render: ListItem,
+
+	props: {
+		title: {
+			type: String,
+			required: true,
+		},
+		subtitle: {
+			type: String,
+			required: false,
+		},
+		image: {
+			type: Image,
+			required: false,
+		},
+	},
 }

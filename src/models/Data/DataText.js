@@ -16,15 +16,22 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import DataImage from '../../components/Data/DataImage'
 
-// Various variables used by this app
-:root {
-	--header-height: $header-height;
-	--top-bar-height: 60px;
+export default {
+	icon: 'icon-type-text',
+	name: t('build', 'Text'),
+	provides: [
+		{
+			name: t('build', 'Default'),
+			type: String,
+			// Backend provides string
+			get: data => data.toString(),
+		},
+	],
+
+	component: DataImage,
 }
-
-@import 'variables';
-@import 'icons';

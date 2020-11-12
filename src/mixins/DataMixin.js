@@ -23,7 +23,7 @@ import { generateOcsUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 
-import Question from '../components/Questions/Question'
+import Data from '../components/Data/Data'
 
 export default {
 	inheritAttrs: false,
@@ -97,7 +97,7 @@ export default {
 	},
 
 	components: {
-		Question,
+		Data,
 	},
 
 	data() {
@@ -170,7 +170,7 @@ export default {
 		async saveQuestionProperty(key, value) {
 			try {
 				// TODO: add loading status feedback ?
-				await axios.post(generateOcsUrl('apps/forms/api/v1', 2) + 'question/update', {
+				await axios.post(generateOcsUrl('apps/build/api/v1', 2) + 'question/update', {
 					id: this.id,
 					keyValuePairs: {
 						[key]: value,

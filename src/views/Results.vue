@@ -199,7 +199,7 @@ export default {
 		},
 
 		copyShareLink(event) {
-			const $formLink = window.location.protocol + '//' + window.location.host + generateUrl(`/apps/forms/${this.form.hash}`)
+			const $formLink = window.location.protocol + '//' + window.location.host + generateUrl(`/apps/build/${this.form.hash}`)
 			if (this.$clipboard($formLink)) {
 				showSuccess(t('build', 'Form link copied'))
 			} else {
@@ -214,7 +214,7 @@ export default {
 			console.debug('Loading results for form', this.form.hash)
 
 			try {
-				const response = await axios.get(generateOcsUrl('apps/forms/api/v1', 2) + `submissions/${this.form.hash}`)
+				const response = await axios.get(generateOcsUrl('apps/build/api/v1', 2) + `submissions/${this.form.hash}`)
 
 				// Append questions & submissions
 				this.$set(this.form, 'submissions', response.data.submissions)
@@ -231,7 +231,7 @@ export default {
 			this.loadingResults = true
 
 			try {
-				await axios.delete(generateOcsUrl('apps/forms/api/v1', 2) + `submission/${id}`)
+				await axios.delete(generateOcsUrl('apps/build/api/v1', 2) + `submission/${id}`)
 				const index = this.form.submissions.findIndex(search => search.id === id)
 				this.form.submissions.splice(index, 1)
 			} catch (error) {
@@ -249,7 +249,7 @@ export default {
 
 			this.loadingResults = true
 			try {
-				await axios.delete(generateOcsUrl('apps/forms/api/v1', 2) + `submissions/${this.form.id}`)
+				await axios.delete(generateOcsUrl('apps/build/api/v1', 2) + `submissions/${this.form.id}`)
 				this.form.submissions = []
 			} catch (error) {
 				console.error(error)

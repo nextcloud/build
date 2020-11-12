@@ -73,7 +73,7 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 
 export default {
-	name: 'Question',
+	name: 'Data',
 
 	directives: {
 		ClickOutside,

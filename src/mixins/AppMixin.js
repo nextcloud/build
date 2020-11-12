@@ -1,3 +1,4 @@
+
 /**
  * @copyright Copyright (c) 2020 John Molakvoæ <skjnldsv@protonmail.com>
  *
@@ -19,16 +20,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AppMixin from './AppMixin'
+import { generateOcsUrl } from '@nextcloud/router'
+import { showError } from '@nextcloud/dialogs'
+import axios from '@nextcloud/axios'
 
 export default {
 	props: {
-		uuid: {
-			type: String,
-			default: '',
+		app: {
+			type: Object,
+			required: true,
 		},
 	},
 
-	mixins: [AppMixin],
+	computed: {
+		/**
+		 * Return app title or placeholder if not set
+		 * @returns {string}
+		 */
+		appTitle() {
+			if (this.app.title) {
+				return this.app.title
+			}
+			return t('build', 'New app')
+		},
+	},
+
+	methods: {
+		async saveAppProperty(key) {
+			try {
+				// TODO: add loading status feedback ?
+				await axios.post(generateOcsUrl('apps/build/api/v1', 2) + 'app/update', {
+					buildAppId: this.app.uuid,
+					key,
+					value: this.app[key],
+				})
+			} catch (error) {
+				showError(t('build', 'Error while saving app'))
+				console.error(error)
+			}
+		},
+	},
 
 }

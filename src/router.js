@@ -27,7 +27,6 @@ import Router from 'vue-router'
 import { generateUrl } from '@nextcloud/router'
 
 import Create from './views/Create'
-import Results from './views/Results'
 import Sidebar from './views/Sidebar'
 
 Vue.use(Router)
@@ -37,7 +36,7 @@ export default new Router({
 
 	// if index.php is in the url AND we got this far, then it's working:
 	// let's keep using index.php in the url
-	base: generateUrl('/apps/forms', ''),
+	base: generateUrl('/apps/build', ''),
 	linkActiveClass: 'active',
 
 	routes: [
@@ -46,24 +45,12 @@ export default new Router({
 			name: 'root',
 		},
 		{
-			path: '/:hash',
-			redirect: { name: 'edit' },
-			name: 'formRoot',
-			props: true,
-		},
-		{
-			path: '/:hash/edit',
+			path: '/:uuid',
 			components: {
 				default: Create,
 				sidebar: Sidebar,
 			},
-			name: 'edit',
-			props: { default: true },
-		},
-		{
-			path: '/:hash/results',
-			component: Results,
-			name: 'results',
+			name: 'designer',
 			props: true,
 		},
 	],

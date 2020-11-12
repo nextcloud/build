@@ -30,6 +30,7 @@
 @include icon-black-white('answer-short', 'build', 1);
 @include icon-black-white('answer-long', 'build', 1);
 @include icon-black-white('drag-handle', 'build', 1);
+@include icon-black-white('square-foot', 'build', 1);
 
 .icon-yes {
 	@include icon-color('checkmark', 'actions', $color-success, 1, true);
