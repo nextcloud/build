@@ -137,7 +137,6 @@
 	<xs:simpleType name="datatype-enumeration">
 		<xs:restriction base="non-empty-string">
 			<xs:enumeration value="checkbox"/>
-			<xs:enumeration value="multiple-choice"/>
 			<xs:enumeration value="text"/>
 			<xs:enumeration value="number"/>
 			<xs:enumeration value="date"/>

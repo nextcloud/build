@@ -49,7 +49,7 @@
 				<column>
 					<uuid>9f420efa-2d61-4682-adf7-d639d513348c</uuid>
 					<name>State</name>
-					<type>multiple-choice</type>
+					<type>text</type>
 					<required>true</required>
 					<default/>
 					<choices>
