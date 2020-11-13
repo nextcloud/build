@@ -42,9 +42,10 @@
 				<column>
 					<uuid>0317e9e8-1b2c-4e36-958c-01429a0b98c8</uuid>
 					<name>Maintainer</name>
-					<type limit="2">contacts</type>
+					<type>contacts</type>
 					<required>true</required>
 					<default/>
+					<max-values>2</max-values>
 				</column>
 				<column>
 					<uuid>9f420efa-2d61-4682-adf7-d639d513348c</uuid>

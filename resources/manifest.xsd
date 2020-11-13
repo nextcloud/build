@@ -119,6 +119,7 @@
 			<xs:element name="required" type="xs:boolean" minOccurs="1" maxOccurs="1" />
 			<xs:element name="default" type="xs:string" minOccurs="1" maxOccurs="1" />
 			<xs:element name="choices" type="choices" minOccurs="0" maxOccurs="1" />
+			<xs:element name="max-values" type="xs:positiveInteger" minOccurs="0" default="1" />
 		</xs:sequence>
 	</xs:complexType>
 
@@ -134,7 +135,7 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:simpleType name="datatype-enumeration">
+	<xs:simpleType name="datatype">
 		<xs:restriction base="non-empty-string">
 			<xs:enumeration value="checkbox"/>
 			<xs:enumeration value="text"/>
@@ -146,13 +147,5 @@
 			<xs:enumeration value="file"/>
 		</xs:restriction>
 	</xs:simpleType>
-
-	<xs:complexType name="datatype">
-		<xs:simpleContent>
-			<xs:extension base="datatype-enumeration">
-				<xs:attribute name="limit" type="xs:integer" default="1" use="optional"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
 
 </xs:schema>
