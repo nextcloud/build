@@ -61,27 +61,21 @@
 
 	<xs:complexType name="view">
 		<xs:sequence>
-			<xs:element name="navigation" type="navigationView" minOccurs="1" maxOccurs="1" />
-			<xs:element name="detail" type="detailView" minOccurs="1" maxOccurs="1" />
+			<xs:element name="navigation" type="viewBasic" minOccurs="1" maxOccurs="1" />
+			<xs:element name="detail" type="viewBasic" minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="navigationView">
+	<xs:complexType name="viewBasic">
 		<xs:annotation>
 			<xs:documentation>
 				All tags will contain a reference to an existing column
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="headline" type="columnRef" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="icon" type="columnRef" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="subline" type="columnRef" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="detailView">
-		<xs:sequence>
-			<xs:element name="element" type="columnRef" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="headline" type="uuid" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="icon" type="uuid" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="subline" type="uuid" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -125,12 +119,7 @@
 			<xs:element name="required" type="xs:boolean" minOccurs="1" maxOccurs="1" />
 			<xs:element name="default" type="xs:string" minOccurs="1" maxOccurs="1" />
 			<xs:element name="choices" type="choices" minOccurs="0" maxOccurs="1" />
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="columnRef">
-		<xs:sequence>
-			<xs:element name="uuid" type="uuid" minOccurs="1" maxOccurs="1" />
+			<xs:element name="max-values" type="xs:positiveInteger" minOccurs="0" default="1" />
 		</xs:sequence>
 	</xs:complexType>
 
@@ -146,10 +135,9 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:simpleType name="datatype-enumeration">
+	<xs:simpleType name="datatype">
 		<xs:restriction base="non-empty-string">
 			<xs:enumeration value="checkbox"/>
-			<xs:enumeration value="multiple-choice"/>
 			<xs:enumeration value="text"/>
 			<xs:enumeration value="number"/>
 			<xs:enumeration value="date"/>
@@ -159,13 +147,5 @@
 			<xs:enumeration value="file"/>
 		</xs:restriction>
 	</xs:simpleType>
-
-	<xs:complexType name="datatype">
-		<xs:simpleContent>
-			<xs:extension base="datatype-enumeration">
-				<xs:attribute name="limit" type="xs:integer" default="1" use="optional"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
 
 </xs:schema>

@@ -42,14 +42,15 @@
 				<column>
 					<uuid>0317e9e8-1b2c-4e36-958c-01429a0b98c8</uuid>
 					<name>Maintainer</name>
-					<type limit="2">contacts</type>
+					<type>contacts</type>
 					<required>true</required>
 					<default/>
+					<max-values>2</max-values>
 				</column>
 				<column>
 					<uuid>9f420efa-2d61-4682-adf7-d639d513348c</uuid>
 					<name>State</name>
-					<type>multiple-choice</type>
+					<type>text</type>
 					<required>true</required>
 					<default/>
 					<choices>
@@ -65,26 +66,13 @@
 
 	<view>
 		<navigation>
-			<headline>
-				<uuid>676f0614-4306-42a9-b963-514624f1774d</uuid>
-			</headline>
-			<icon>
-				<uuid>84979eeb-fb3c-4304-a28f-225d8cfd621e</uuid>
-			</icon>
+			<headline>676f0614-4306-42a9-b963-514624f1774d</headline>
+			<icon>84979eeb-fb3c-4304-a28f-225d8cfd621e</icon>
 		</navigation>
 		<detail>
-			<element>
-				<uuid>84979eeb-fb3c-4304-a28f-225d8cfd621e</uuid>
-			</element>
-			<element>
-				<uuid>676f0614-4306-42a9-b963-514624f1774d</uuid>
-			</element>
-			<element>
-				<uuid>9f420efa-2d61-4682-adf7-d639d513348c</uuid>
-			</element>
-			<element>
-				<uuid>0317e9e8-1b2c-4e36-958c-01429a0b98c8</uuid>
-			</element>
+			<headline>676f0614-4306-42a9-b963-514624f1774d</headline>
+			<icon>84979eeb-fb3c-4304-a28f-225d8cfd621e</icon>
+			<subline>bceadfe4-4111-44b3-bd04-dd724117fef9</subline>
 		</detail>
 	</view>
 </buildapp>
