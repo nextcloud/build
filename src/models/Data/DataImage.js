@@ -22,7 +22,7 @@
 import b64toBlob from 'b64-to-blob'
 import DataImage from '../../components/Data/DataImage'
 
-const b64Regex = /image\/([a-z]+);base64,(.+)/i;
+const b64Regex = /image\/([a-z]+);base64,(.+)/i
 
 /**
  * Export the base64 string uri to a usable blob

@@ -32,16 +32,14 @@ export default {
 
 	props: {
 		title: {
+			name: t('build', 'Title'),
 			type: String,
 			required: true,
 		},
-		subtitle: {
-			type: String,
-			required: false,
-		},
 		image: {
+			name: t('build', 'Heading image'),
 			type: Image,
-			required: false,
+			required: true,
 		},
 	},
 }

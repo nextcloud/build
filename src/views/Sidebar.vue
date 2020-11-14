@@ -22,6 +22,7 @@
 
 <template>
 	<AppSidebar
+		:active.sync="activeTab"
 		:title="appTitle">
 		<TabLayout :app="app" />
 		<TabSettings :app="app" />
@@ -44,6 +45,12 @@ export default {
 		TabSettings,
 	},
 	mixins: [ViewsMixin],
+
+	data() {
+		return {
+			activeTab: '',
+		}
+	},
 
 	computed: {
 	},

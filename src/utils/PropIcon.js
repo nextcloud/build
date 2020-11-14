@@ -1,4 +1,3 @@
-
 /**
  * @copyright Copyright (c) 2020 John Molakvoæ <skjnldsv@protonmail.com>
  *
@@ -17,11 +16,17 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import AvatarHeaderLayout from './AvatarHeaderLayout'
-
-export default [
-	AvatarHeaderLayout,
-]
+/**
+ * Return the matching icon string from a JS type
+ *
+ * @param {any} type the type used
+ * @returns {string}
+ */
+export default function(type) {
+	const name = type.name?.toLowerCase?.() || 'unknown'
+	return `icon-type-${name}`
+}

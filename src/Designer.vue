@@ -155,7 +155,11 @@ export default {
 						created: 1604287762,
 						last_modified: 1604487762,
 						homelayout: 'list',
+						homelayoutData: {
+						},
 						detailslayout: 'avatar-header',
+						detailslayoutData: {
+						},
 					},
 					{
 						uuid: '2e528a52-c444-4e33-ab79-ecfc96b84a35',

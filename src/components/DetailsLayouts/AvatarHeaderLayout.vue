@@ -20,9 +20,7 @@
   -
   -->
 <template>
-	<section>
-		
-	</section>
+	<section />
 </template>
 
 <script>

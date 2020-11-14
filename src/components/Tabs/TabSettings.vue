@@ -29,12 +29,14 @@
 <script>
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 
+import TabMixin from '../../mixins/TabMixin'
 export default {
 	name: 'TabSettings',
 
 	components: {
 		AppSidebarTab,
 	},
+	mixins: [TabMixin],
 
 	computed: {
 		icon: () => 'icon-settings',

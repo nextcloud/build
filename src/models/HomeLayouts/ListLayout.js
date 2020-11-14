@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 import ListLayout from '../../components/HomeLayouts/ListLayout'
 
 export default {
@@ -32,14 +31,17 @@ export default {
 
 	props: {
 		title: {
+			name: t('build', 'Title'),
 			type: String,
 			required: true,
 		},
 		subtitle: {
+			name: t('build', 'Subtitle'),
 			type: String,
 			required: false,
 		},
 		image: {
+			name: t('build', 'Image'),
 			type: Image,
 			required: false,
 		},

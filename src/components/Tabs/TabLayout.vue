@@ -25,37 +25,40 @@
 		:name="name"
 		:icon="icon"
 		class="layout">
-		<!-- Home layout style selector -->
-		<ul class="layout__styles">
-			<li v-for="layout in Layouts" :key="layout.id">
-				<button :class="{ [layout.icon]: true,'layout__style--active': isSelected(layout) }"
-					class="layout__style">
-					{{ layout.name }}
-				</button>
-			</li>
-		</ul>
-
-		<!-- Required prop picker for the selected layout -->
+		<LayoutPropsPicker
+			:app-data="app.data"
+			:layouts="HomeLayouts"
+			:selected-layout="app.homelayout"
+			:selected-layout-data="app.homelayoutData" />
+		<LayoutPropsPicker
+			:app-data="app.data"
+			:layouts="DetailsLayouts"
+			:selected-layout="app.detailslayout"
+			:selected-layout-data="app.detailslayoutData" />
 	</AppSidebarTab>
 </template>
 
 <script>
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 
-import AppMixin from '../../mixins/AppMixin'
-import * as Layouts from '../../models/HomeLayouts'
+import TabMixin from '../../mixins/TabMixin'
+import DetailsLayouts from '../../models/DetailsLayouts'
+import HomeLayouts from '../../models/HomeLayouts'
+import LayoutPropsPicker from '../../components/LayoutPropsPicker'
 
 export default {
 	name: 'TabLayout',
 
 	components: {
 		AppSidebarTab,
+		LayoutPropsPicker,
 	},
-	mixins: [AppMixin],
+	mixins: [TabMixin],
 
 	data() {
 		return {
-			Layouts,
+			DetailsLayouts,
+			HomeLayouts,
 		}
 	},
 
@@ -63,12 +66,6 @@ export default {
 		icon: () => 'icon-square-foot',
 		id: () => 'build-layout',
 		name: () => t('build', 'Layout'),
-	},
-
-	methods: {
-		isSelected(layout) {
-			return this.app.layout === layout.id
-		},
 	},
 }
 </script>

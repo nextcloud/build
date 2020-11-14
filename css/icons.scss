@@ -58,3 +58,8 @@
 	width: 16px;
 	height: 16px;
 }
+
+
+// LAYOUTS
+@include icon-black-white('layout-list', 'build', 1);
+@include icon-black-white('layout-avatar-header', 'build', 1);

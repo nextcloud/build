@@ -22,42 +22,83 @@
 
 <template>
 	<section class="layout">
-		<h3>{{ t('build', 'Style') }}</h3>
-		<ul class="layout__styles">
+		<!-- Layout styling picker if multiple available -->
+		<h3 v-if="layouts.length === 1 && false">
+			{{ t('build', 'Selected style: {style}', {style: layouts[0].name}) }}
+		</h3>
+		<h3 v-else>
+			{{ t('build', 'Style') }}
+		</h3>
+		<ul v-if="layouts.length > 1 && false" class="layout__styles">
 			<li v-for="layout in layouts" :key="layout.id">
 				<button
-					class="layout__style"
-					:class="{
-						[layout.icon]: true,
-						'layout__style--active': selected.id === layout.id
-					}">
+					class="layout__style-button"
+					:class="{ 'layout__style-button--active': selected.id === layout.id }">
+					<span class="layout__icon" :class="layout.icon" />
 					{{ layout.name }}
 				</button>
 			</li>
 		</ul>
 
-		<div class="layout__props">
-			<h3>{{ t('build', 'Data') }}</h3>
-			<!-- <li v-for="layout in layouts" :key="layout.id">
-
-			</li> -->
-		</div>
+		<h3>{{ t('build', 'Data') }}</h3>
+		<ul class="layout__props">
+			<li v-for="(prop, id) in selected.props"
+				:key="id"
+				:class="{'layout__prop--required': prop.required}"
+				class="layout__prop">
+				<label>
+					<span>{{ prop.name }} <span v-if="prop.required" role="note">({{ t('build', 'required') }})</span></span>
+					<Multiselect
+						:options="dataForType(prop.type)"
+						:placeholder="t('build', 'Select matching data')"
+						:required="prop.required"
+						:value="selectedLayoutData[id]"
+						class="layout__prop-picker"
+						label="name"
+						track-by="uuid">
+						<template #noOptions>
+							{{ t('build', 'Please add a data matching the type {type}', { type: prop.type.name }) }}
+						</template>
+					</Multiselect>
+				</label>
+			</li>
+		</ul>
 	</section>
 </template>
 
 <script>
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import getPropIcon from '../utils/PropIcon'
+
 export default {
 	name: 'LayoutPropsPicker',
+
+	components: {
+		Multiselect,
+	},
 
 	props: {
 		layouts: {
 			type: Array,
 			required: true,
 		},
-		selectedId: {
+		selectedLayout: {
 			type: String,
-			required: true,
+			default: null,
 		},
+		appData: {
+			type: Array,
+			default: () => [],
+		},
+		selectedLayoutData: {
+			type: Object,
+			default: () => ({}),
+		},
+	},
+	data() {
+		return {
+			getPropIcon,
+		}
 	},
 
 	computed: {
@@ -66,37 +107,88 @@ export default {
 		 * @returns {Object}
 		 */
 		selected() {
-			return this.layouts.find(layout => layout.id === this.selectedId)
+			return this.layouts.find(layout => layout.id === this.selectedLayout)
 				|| this.layouts.find(layout => layout.default)
+		},
+	},
+
+	methods: {
+		dataForType(type) {
+			return this.appData.filter(data => data.type === type)
 		},
 	},
 }
 </script>
 
-<style lang="scss">
-.empty-content {
-	margin-top: 20vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	text-align: center;
+<style lang="scss" scoped>
+$layout-width: 96px;
+$layout-padding: 16px;
+$icon-size: 32px;
+
+.layout {
+	margin-bottom: 44px;
+
+	&__styles,
+	&__props {
+		display: flex;
+		flex-wrap: wrap;
+		padding: 0 $layout-padding;
+	}
+
+	&__style-button {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		width: $layout-width;
+		padding: $layout-padding;
+		border: none;
+		border-radius: var(--border-radius-large);
+		background-color: transparent;
+		font-weight: normal;
+		&--active {
+			background-color: var(--color-background-dark);
+			.layout__icon {
+				opacity: .7;
+			}
+		}
+
+		&:hover,
+		&:focus {
+			background-color: var(--color-background-darker);
+			.layout__icon {
+				opacity: .7;
+			}
+		}
+	}
 
 	&__icon {
-		width: 64px;
-		height: 64px;
-		margin: 0 auto 15px;
-		opacity: .4;
-		background-size: 64px;
-		background-repeat: no-repeat;
-		background-position: center;
+		width: $icon-size;
+		height: $icon-size;
+		margin-bottom: 5px;
+		opacity: .5;
+		background-size: $icon-size;
 	}
 
-	&__title {
-		margin-bottom: 8px;
+	&__prop {
+		width: 100%;
+		margin-bottom: 4px;
+
+		> label {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		span[role='note'] {
+			color: var(--color-text-maxcontrast);
+		}
 	}
 
-	&__desc {
-		margin-bottom: 16px;
+	&__prop-picker {
+		// grow up to 250px, shrink if sidebar gets narrower
+		flex: 0 1 250px;
+		width: 250px;
+		margin-left: 10px;
 	}
 }
 

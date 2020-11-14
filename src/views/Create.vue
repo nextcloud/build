@@ -30,18 +30,6 @@
 	</AppContent>
 
 	<AppContent v-else>
-		<!-- Show results & sidebar button -->
-		<TopBar>
-			<button @click="showResults">
-				<span class="icon-comment" role="img" />
-				{{ t('build', 'Responses') }}
-			</button>
-			<button v-tooltip="t('build', 'Toggle settings')"
-				@click="toggleSidebar">
-				<span class="icon-menu-sidebar" role="img" />
-			</button>
-		</TopBar>
-
 		<!-- Apps title & description-->
 		<header>
 			<h2>
@@ -128,10 +116,10 @@ import Draggable from 'vuedraggable'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
 import DataTypes from '../models/DataTypes'
 import CancelableRequest from '../utils/CancelableRequest'
-import EmptyContent from '../components/EmptyContent'
 import Data from '../components/Data/Data'
 import DataTextLong from '../components/Data/DataTextLong'
 import DataTextMultiple from '../components/Data/DataTextMultiple'
