@@ -29,6 +29,43 @@ type: docker
 
 ---
 kind: pipeline
+name: tests-master-nodb
+
+clone:
+    depth: 1
+
+steps:
+    - name: php7.3
+      image: nextcloudci/php7.3:php7.3-5
+      environment:
+          APP_NAME: build
+          CORE_BRANCH: master
+          DB: sqlite
+      commands:
+          - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
+          - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
+          - cd ../server/apps/$APP_NAME
+          - make composer
+          - cd tests/Unit/
+          - phpunit --exclude-group DB --configuration phpunit.xml
+    - name: php7.4
+      image: nextcloudci/php7.4:php7.4-2
+      environment:
+          APP_NAME: build
+          CORE_BRANCH: master
+          DB: sqlite
+      commands:
+          - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
+          - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
+          - cd ../server/apps/$APP_NAME
+          - make composer
+          - cd tests/Unit/
+          - phpunit --exclude-group DB --configuration phpunit.xml
+
+type: docker
+
+---
+kind: pipeline
 name: tests-master
 
 clone:
@@ -47,7 +84,7 @@ steps:
           - cd ../server/apps/$APP_NAME
           - make composer
           - cd tests/Unit/
-          - phpunit --configuration phpunit.xml
+          - phpunit --group DB --configuration phpunit.xml
     - name: php7.4
       image: nextcloudci/php7.4:php7.4-2
       environment:
@@ -60,7 +97,7 @@ steps:
           - cd ../server/apps/$APP_NAME
           - make composer
           - cd tests/Unit/
-          - phpunit --configuration phpunit.xml
+          - phpunit --group DB --configuration phpunit.xml
 
 type: docker
 
@@ -82,7 +119,7 @@ steps:
           - cd apps/$APP_NAME
           - make composer
           - cd tests/Unit/
-          - phpunit --configuration phpunit.xml
+          - phpunit --group DB --configuration phpunit.xml
 
 services:
     - name: postgres
@@ -118,7 +155,7 @@ steps:
           - cd apps/$APP_NAME
           - make composermake composer
           - cd tests/Unit/
-          - phpunit --configuration phpunit.xml
+          - phpunit --group DB --configuration phpunit.xml
 
 services:
     - name: mysql
