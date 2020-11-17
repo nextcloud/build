@@ -152,4 +152,27 @@ class AppMapperTest extends TestCase {
 		$this->assertSame($description, $foundApp->getDescription());
 		$this->assertSame($version, $foundApp->getVersion());
 	}
+
+	/**
+	 * @dataProvider appProvider
+	 */
+	public function testFindAppAsArray(string $uuid, string $name, string $description, string $version) {
+		$app = new App();
+		$app->setId($uuid);
+		$app->setName($name);
+		$app->setDescription($description);
+		$app->setVersion($version);
+
+		$this->mapper->insert($app);
+
+		$foundApp = $this->mapper->findByUuid($uuid);
+		$appData = $foundApp->asArray();
+
+		$this->assertArrayHasKey('uuid', $appData);
+		$this->assertArrayHasKey('name', $appData);
+		$this->assertArrayHasKey('description', $appData);
+		$this->assertArrayHasKey('version', $appData);
+		$this->assertArrayHasKey('created', $appData);
+		$this->assertArrayHasKey('lastModified', $appData);
+	}
 }

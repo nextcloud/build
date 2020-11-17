@@ -35,6 +35,8 @@ use OCA\Build\Db\TableMappper;
 use OCA\Build\Db\ViewConfigurationMapper;
 use OCA\Build\Service\AppService;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\Files\IAppData;
+use OCP\Files\NotFoundException;
 use OCP\IDBConnection;
 use Test\TestCase;
 
@@ -53,6 +55,8 @@ class AppServiceTest extends TestCase {
 	protected $optionMapper;
 	/** @var AppService */
 	protected $service;
+	/** @var IAppData|\PHPUnit\Framework\MockObject\MockObject */
+	protected $appData;
 
 	public function setUp(): void {
 		$this->dbc = $this->createMock(IDBConnection::class);
@@ -61,6 +65,7 @@ class AppServiceTest extends TestCase {
 		$this->columnMapper = $this->createMock(ColumnMapper::class);
 		$this->viewMapper = $this->createMock(ViewConfigurationMapper::class);
 		$this->optionMapper = $this->createMock(OptionMapper::class);
+		$this->appData = $this->createMock(IAppData::class);
 
 		$this->service = new AppService(
 			$this->dbc,
@@ -68,23 +73,45 @@ class AppServiceTest extends TestCase {
 			$this->tableMapper,
 			$this->columnMapper,
 			$this->viewMapper,
-			$this->optionMapper
+			$this->optionMapper,
+			$this->appData
 		);
 	}
 
 	public function testGetApp() {
 		$uuid = '8d2d7771-4bc9-4c17-a446-72717fb931d7';
+		$appDbInfo = [
+			'uuid' => $uuid,
+			'name' => 'Rocket launcher',
+			'version' => '13.3.7',
+			'created' => time() - 31536000, // a year agp
+			'lastModified' => time() - 604800, // 7 days ago
+			'description' => 'Log of rocket launches',
+		];
+		$appCompleteInfo = \array_merge($appDbInfo,
+			[
+				'icon' => 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIuMiwxNi4wNkwzLjg4LDEyTDIuMiw3Ljk0TDYuMjYsNi4yNkw3Ljk0LDIuMkwxMiwzLjg4TDE2LjA2LDIuMkwxNy43NCw2LjI2TDIxLjgsNy45NEwyMC4xMiwxMkwyMS44LDE2LjA2TDE3Ljc0LDE3Ljc0TDE2LjA2LDIxLjhMMTIsMjAuMTJMNy45NCwyMS44TDYuMjYsMTcuNzRMMi4yLDE2LjA2WiIgZmlsbD0iI2ZmZiIgLz48L3N2Zz4='
+			]
+		);
 
 		$appMock = $this->createMock(App::class);
+		$appMock->expects($this->atLeastOnce())
+			->method('asArray')
+			->willReturn($appDbInfo);
 
 		$this->appMapper->expects($this->once())
 			->method('findByUuid')
 			->with($uuid)
 			->willReturn($appMock);
 
-		$app = $this->service->getApp($uuid);
+		$this->appData->expects($this->any())
+			->method('getFolder')
+			->with('designer')
+			->willThrowException(new NotFoundException());
 
-		$this->assertSame($appMock, $app);
+		$appInfo = $this->service->getAppInfo($uuid);
+
+		$this->assertSame($appCompleteInfo, $appInfo);
 	}
 
 	public function testGetStructureTableNotFound() {

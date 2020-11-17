@@ -36,6 +36,7 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'build';
+	public const SCHEMA_VERSION = '1.0.0';
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);

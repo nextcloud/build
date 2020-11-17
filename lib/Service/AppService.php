@@ -33,6 +33,9 @@ use OCA\Build\Db\TableMappper;
 use OCA\Build\Db\ViewConfigurationMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\Files\IAppData;
+use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
 use OCP\IDBConnection;
 use Ramsey\Uuid\Uuid;
 
@@ -49,6 +52,8 @@ class AppService {
 	private $viewConfigurationMapper;
 	/** @var OptionMapper */
 	private $optionMapper;
+	/** @var IAppData */
+	private $appData;
 
 	public function __construct(
 		IDBConnection $dbc,
@@ -56,7 +61,8 @@ class AppService {
 		TableMappper $tableMapper,
 		ColumnMapper $columnMapper,
 		ViewConfigurationMapper $viewConfigurationMapper,
-		OptionMapper $optionMapper
+		OptionMapper $optionMapper,
+		IAppData $appData
 	) {
 		$this->dbc = $dbc;
 		$this->appMapper = $appMapper;
@@ -64,6 +70,7 @@ class AppService {
 		$this->columnMapper = $columnMapper;
 		$this->viewConfigurationMapper = $viewConfigurationMapper;
 		$this->optionMapper = $optionMapper;
+		$this->appData = $appData;
 	}
 
 	public function newApp(): App {
@@ -78,8 +85,30 @@ class AppService {
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getApp(string $uuid): App {
-		return $this->appMapper->findByUuid($uuid);
+	public function getAppInfo(string $uuid): array {
+		$app = $this->appMapper->findByUuid($uuid)->asArray();
+		$app['icon'] = $this->getIconAsBase64EncodedDataUrl($app['uuid']);
+
+		return $app;
+	}
+
+	protected function getIconAsBase64EncodedDataUrl(string $appUuid): string {
+		$imageMime = 'image/svg+xml';
+		try {
+			$appFolder = $this->appData->getFolder('designer');
+			$iconFile = $appFolder->getFile($appUuid);
+			if (strpos($iconFile->getMimeType(), 'image/') !== 0) {
+				throw new NotFoundException();
+			}
+			$imageData = $iconFile->getContent();
+			$imageMime = $iconFile->getMimeType();
+		} catch (NotFoundException $e) {
+			$imageData = file_get_contents(__DIR__ . '/../../img/build.svg');
+		} catch (NotPermittedException $e) {
+			$imageData = file_get_contents(__DIR__ . '/../../img/build.svg');
+		}
+
+		return 'data:' . $imageMime . ';base64,' . base64_encode($imageData);
 	}
 
 	public function getStructure(string $uuid): array {

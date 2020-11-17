@@ -29,6 +29,7 @@ use OCA\Build\AppInfo\Application;
 use OCA\Build\Service\AppService;
 use OCA\Build\Service\Manifest;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
@@ -91,14 +92,20 @@ class AppController extends OCSController {
 
 	public function get(string $uuid): Response {
 		try {
-			$buildApp = $this->appService->getApp($uuid);
+			$appInfo = $this->appService->getAppInfo($uuid);
 			$appData = [
-				'metadata' => $buildApp->asArray(),
+				'metadata' => [
+					'version' => Application::SCHEMA_VERSION,
+				],
+				'appinfo' => $appInfo,
 				'structure' => [],
 				'views' => [],
 			];
 		} catch (DoesNotExistException $e) {
 			return new NotFoundResponse();
+		} catch (MultipleObjectsReturnedException $e) {
+			$response = new Response();
+			$response->setStatus(Http::STATUS_CONFLICT);
 		}
 
 		try {
@@ -112,9 +119,6 @@ class AppController extends OCSController {
 		} catch (DoesNotExistException $e) {
 			// OK when not configured yet
 		}
-
-		//FIXME: consistency: buildApp returns the entity, but
-		// getStructure and getViews returns everything as array.
 
 		return new JSONResponse($appData);
 	}
