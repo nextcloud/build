@@ -24,9 +24,9 @@ import DataImage from '../../components/Data/DataImage'
 export default {
 	icon: 'icon-type-text',
 	name: t('build', 'Text'),
+	column: 'text',
 	provides: [
 		{
-			name: t('build', 'Default'),
 			type: String,
 			// Backend provides string
 			get: data => data.toString(),

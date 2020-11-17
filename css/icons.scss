@@ -63,3 +63,9 @@
 // LAYOUTS
 @include icon-black-white('layout-list', 'build', 1);
 @include icon-black-white('layout-avatar-header', 'build', 1);
+
+// Types
+@include icon-black-white('type-image', 'build', 1);
+@include icon-black-white('type-text', 'build', 1);
+@include icon-black-white('type-url', 'build', 1);
+@include icon-black-white('type-contact', 'build', 1);

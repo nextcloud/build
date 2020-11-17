@@ -52,6 +52,7 @@
 						:options="dataForType(prop.type)"
 						:placeholder="t('build', 'Select matching data')"
 						:required="prop.required"
+						:user-select="true"
 						:value="selectedLayoutData[id]"
 						class="layout__prop-picker"
 						label="name"
@@ -86,7 +87,7 @@ export default {
 			type: String,
 			default: null,
 		},
-		appData: {
+		appColumns: {
 			type: Array,
 			default: () => [],
 		},
@@ -113,8 +114,32 @@ export default {
 	},
 
 	methods: {
+		/**
+		 * Pull out every column that have a data that can provide the desired type
+		 * @param {any} type a js type
+		 * @returns {Array}
+		 */
 		dataForType(type) {
-			return this.appData.filter(data => data.type === type)
+			return this.appColumns.map(column => {
+				const ressources = column.data.provides.filter(provider => provider.type === type)
+
+				// If we have available ressources, format them properly
+				if (ressources.length > 0) {
+					// Format option text, e.g 'Customer (Display name)'
+					return ressources.map(ressource => {
+						ressource = Object.assign({}, ressource, {
+							// using the AvatarSelectOption layout to display icons and second lines
+							displayName: column.name,
+							desc: ressource?.name,
+							isNoUser: true,
+							icon: column.data.icon,
+						})
+						console.debug(ressource)
+						return ressource
+					})
+				}
+				return []
+			}).flat()
 		},
 	},
 }
@@ -177,6 +202,7 @@ $icon-size: 32px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			user-select: none;
 		}
 
 		span[role='note'] {

@@ -27,7 +27,7 @@
 			<AppNavigationNew button-class="icon-add" :text="t('build', 'New app')" @click="onNewApp" />
 			<template #list>
 				<AppNavigationApp v-for="app in apps"
-					:key="app.id"
+					:key="app.appinfo.uuid"
 					:app="app"
 					@mobile-close-navigation="mobileCloseNavigation"
 					@delete="onDeleteApp" />
@@ -81,6 +81,7 @@ import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import isMobile from '@nextcloud/vue/src/mixins/isMobile'
 
 import AppNavigationApp from './components/AppNavigationApp'
+import AppFormat from './utils/AppFormat'
 
 export default {
 	name: 'Designer',
@@ -114,10 +115,10 @@ export default {
 
 		selectedApp: {
 			get() {
-				return this.apps.find(app => app.uuid === this.routeUuid)
+				return this.apps.find(app => app.appinfo.uuid === this.routeUuid)
 			},
 			set(app) {
-				const index = this.apps.findIndex(search => search.uuid === this.routeUuid)
+				const index = this.apps.findIndex(search => search.appinfo.uuid === this.routeUuid)
 				if (index > -1) {
 					this.$set(this.apps, index, app)
 				}
@@ -147,32 +148,72 @@ export default {
 			try {
 				this.apps = [
 					{
-						uuid: '52365aa0-e808-4d65-8e25-8875ce20fcc6',
-						name: 'Customers',
-						icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHdpZHRoPSIyNCI+PHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xNiAxMWMxLjY2IDAgMi45OS0xLjM0IDIuOTktM1MxNy42NiA1IDE2IDVhMyAzIDAgMTAwIDZ6bS04IDBjMS42NiAwIDIuOTktMS4zNCAyLjk5LTNTOS42NiA1IDggNWEzIDMgMCAxMDAgNnptMCAyYy0yLjMzIDAtNyAxLjE3LTcgMy41VjE5aDE0di0yLjVjMC0yLjMzLTQuNjctMy41LTctMy41em04IDBjLS4yOSAwLS42Mi4wMi0uOTcuMDUgMS4xNi44NCAxLjk3IDEuOTcgMS45NyAzLjQ1VjE5aDZ2LTIuNWMwLTIuMzMtNC42Ny0zLjUtNy0zLjV6Ii8+PC9zdmc+',
-						description: 'Young bleat call collared Sauron\'s answer then? Mood rising blessings Sam criminal? Many that live deserve death. Some that die deserve life. Lightest addled Buckland massacre tomato\'s confounded. Greyhame night hanging caverns predicted member. Diamond fierce champ let\'s anyway squash light visiting Legolas. Smash signature be got called thirsty Boromir\'s horses. Mereth marshaling need wrath wider caution 60 tumble worry ill-favored bars sniff. Repel Mungo\'s parent cracked second faded knots.',
-						version: '1.0.0',
-						created: 1604287762,
-						last_modified: 1604487762,
-						homelayout: 'list',
-						homelayoutData: {
+						metadata: {
+							version: '1.0.0',
 						},
-						detailslayout: 'avatar-header',
-						detailslayoutData: {
+						appinfo: {
+							uuid: '52365aa0-e808-4d65-8e25-8875ce20fcc6',
+							name: 'Customers',
+							icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHdpZHRoPSIyNCI+PHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xNiAxMWMxLjY2IDAgMi45OS0xLjM0IDIuOTktM1MxNy42NiA1IDE2IDVhMyAzIDAgMTAwIDZ6bS04IDBjMS42NiAwIDIuOTktMS4zNCAyLjk5LTNTOS42NiA1IDggNWEzIDMgMCAxMDAgNnptMCAyYy0yLjMzIDAtNyAxLjE3LTcgMy41VjE5aDE0di0yLjVjMC0yLjMzLTQuNjctMy41LTctMy41em04IDBjLS4yOSAwLS42Mi4wMi0uOTcuMDUgMS4xNi44NCAxLjk3IDEuOTcgMS45NyAzLjQ1VjE5aDZ2LTIuNWMwLTIuMzMtNC42Ny0zLjUtNy0zLjV6Ii8+PC9zdmc+',
+							description: 'Young bleat call collared Sauron\'s answer then? Mood rising blessings Sam criminal? Many that live deserve death. Some that die deserve life. Lightest addled Buckland massacre tomato\'s confounded. Greyhame night hanging caverns predicted member. Diamond fierce champ let\'s anyway squash light visiting Legolas. Smash signature be got called thirsty Boromir\'s horses. Mereth marshaling need wrath wider caution 60 tumble worry ill-favored bars sniff. Repel Mungo\'s parent cracked second faded knots.',
+							version: '1.0',
+							created: 1604287762,
+							lastModified: 1604487762,
+						},
+						structure: {
+							table: {
+								uuid: 'a6da4e92-b67d-40cc-a778-1b8342ab1a03',
+								name: 'default',
+								columns: [
+									{
+										uuid: '676f0614-4306-42a9-b963-514624f1774d',
+										name: 'Product',
+										type: 'text',
+										required: true,
+										default: 'Default placeholder',
+									},
+									{
+										uuid: '84979eeb-fb3c-4304-a28f-225d8cfd621e',
+										name: 'Icon',
+										type: 'image',
+										required: false,
+									},
+									{
+										uuid: '0317e9e8-1b2c-4e36-958c-01429a0b98c8',
+										name: 'Maintainer',
+										type: 'contact',
+										required: true,
+										'max-values': 2,
+									},
+									{
+										uuid: '9f420efa-2d61-4682-adf7-d639d513348c',
+										name: 'State',
+										type: 'text',
+										required: true,
+										choices: {
+											'9f420efa-2d61-4682-adf7-d639d513348c': 'Not test',
+											'6aa2af7b-999d-4107-abcb-56fa0f53606b': 'testing',
+											'537da2ab-0917-4546-871b-ec260485128d': 'Test failed',
+											'93a938e9-a392-4de3-8f1e-683266c7b296': 'Test succeeded',
+										},
+									},
+								],
+							},
+						},
+						views: {
+							navigation: {
+								type: 'list',
+								title: '676f0614-4306-42a9-b963-514624f1774d',
+								image: '84979eeb-fb3c-4304-a28f-225d8cfd621e',
+							},
+							details: {
+								type: 'avatar-header',
+								title: '676f0614-4306-42a9-b963-514624f1774d',
+								image: '84979eeb-fb3c-4304-a28f-225d8cfd621e',
+							},
 						},
 					},
-					{
-						uuid: '2e528a52-c444-4e33-ab79-ecfc96b84a35',
-						name: 'Vacations request',
-						icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHdpZHRoPSIyNCI+PHBhdGggZmlsbD0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIvPjxwYXRoIGQ9Ik0xNyA2aC0yVjNhMSAxIDAgMDAtMS0xaC00YTEgMSAwIDAwLTEgMXYzSDdhMiAyIDAgMDAtMiAydjExYzAgMS4xLjkgMiAyIDJhMSAxIDAgMDAxIDEgMSAxIDAgMDAxLTFoNmExIDEgMCAwMDEgMSAxIDEgMCAwMDEtMSAyIDIgMCAwMDItMlY4YTIgMiAwIDAwLTItMnpNOS41IDE4SDhWOWgxLjV2OXptMy4yNSAwaC0xLjVWOWgxLjV2OXptLjc1LTEyaC0zVjMuNWgzVjZ6TTE2IDE4aC0xLjVWOUgxNnY5eiIvPjwvc3ZnPg==',
-						description: 'Emptiness wins caverns green dominion Gaffer prefers. Unfit encourage galumphing shown Grond lord wide other ruined air levels sister. Outside Elf-maiden arm live alike? Garden dwelt sharp release Dimrill tricks skulk. Bloom Beren slaying claimed rain missing! Laid shadow Seeing-stones runt gangrel! Bucklebury such laddie children! It must be taken deep into Mordor and cast back into the fiery chasm from whence it came.',
-						version: '1.0.0',
-						created: 1604311262,
-						last_modified: 1604387762,
-						homelayout: 'list',
-						detailslayout: 'avatar-header',
-					},
-				]
+				].map(AppFormat)
 				// const response = await axios.get(generateOcsUrl('apps/build/api/v1', 2) + 'build')
 				// this.apps = response.data
 			} catch (error) {
@@ -192,7 +233,7 @@ export default {
 				const response = await axios.post(generateOcsUrl('apps/build/api/v1', 2) + 'app')
 				const newApp = response.data
 				this.apps.unshift(newApp)
-				this.$router.push({ name: 'edit', params: { uuid: newApp.uuid } })
+				this.$router.push({ name: 'edit', params: { uuid: newApp.appinfo.uuid } })
 				this.mobileCloseNavigation()
 			} catch (error) {
 				showError(t('build', 'Unable to create a new app'))
@@ -206,7 +247,7 @@ export default {
 		 * @param {Number} uuid the app uuid
 		 */
 		async onDeleteApp(uuid) {
-			const appIndex = this.apps.findIndex(app => app.uuid === uuid)
+			const appIndex = this.apps.findIndex(app => app.appinfo.uuid === uuid)
 			const deletedUuid = this.apps[appIndex].uuid
 
 			this.apps.splice(appIndex, 1)

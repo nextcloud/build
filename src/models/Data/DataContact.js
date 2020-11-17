@@ -38,22 +38,27 @@ const getUrlFromImage = (source = '') => {
 }
 
 export default {
-	icon: 'icon-type-image',
-	name: t('build', 'Image'),
+	icon: 'icon-type-contact',
+	name: t('build', 'Contact'),
 	provides: [
 		{
-			name: t('build', 'Default'),
+			name: t('build', 'Photo'),
 			type: Image,
 			get: data => {
 				const img = new Image()
-				img.src = getUrlFromImage(data)
+				img.src = getUrlFromImage(data.photo)
 				return img
 			},
 		},
 		{
-			name: t('build', 'Url'),
-			type: URL,
-			get: data => new URL(getUrlFromImage(data)),
+			name: t('build', 'Display name'),
+			type: String,
+			get: data => data.fn?.toString?.(),
+		},
+		{
+			name: t('build', 'Address'),
+			type: String,
+			get: data => data.adr[0]?.toString?.(),
 		},
 	],
 

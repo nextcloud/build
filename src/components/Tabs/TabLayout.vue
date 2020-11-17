@@ -26,15 +26,15 @@
 		:icon="icon"
 		class="layout">
 		<LayoutPropsPicker
-			:app-data="app.data"
+			:app-columns="app.structure.table.columns"
 			:layouts="HomeLayouts"
-			:selected-layout="app.homelayout"
-			:selected-layout-data="app.homelayoutData" />
+			:selected-layout="app.views.navigation.type"
+			:selected-layout-data="app.views.navigation" />
 		<LayoutPropsPicker
-			:app-data="app.data"
+			:app-columns="app.structure.table.columns"
 			:layouts="DetailsLayouts"
-			:selected-layout="app.detailslayout"
-			:selected-layout-data="app.detailslayoutData" />
+			:selected-layout="app.views.details.type"
+			:selected-layout-data="app.views.details" />
 	</AppSidebarTab>
 </template>
 

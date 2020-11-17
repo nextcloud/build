@@ -38,10 +38,7 @@ export default {
 		 * @returns {string}
 		 */
 		appTitle() {
-			if (this.app.title) {
-				return this.app.title
-			}
-			return t('build', 'New app')
+			return this.app?.appinfo?.name || t('build', 'New app')
 		},
 	},
 
@@ -50,7 +47,7 @@ export default {
 			try {
 				// TODO: add loading status feedback ?
 				await axios.post(generateOcsUrl('apps/build/api/v1', 2) + 'app/update', {
-					buildAppId: this.app.uuid,
+					buildAppId: this.app.appinfo.uuid,
 					key,
 					value: this.app[key],
 				})
