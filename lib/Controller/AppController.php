@@ -120,7 +120,12 @@ class AppController extends OCSController {
 			// OK when not configured yet
 		}
 
-		return new JSONResponse($appData);
+		$response = new JSONResponse($appData);
+		$d = \DateTime::createFromFormat('U', (string)$appData['appinfo']['lastModified']);
+		if ($d instanceof \DateTime) {
+			$response->setLastModified($d);
+		}
+		return $response;
 	}
 
 	public function export(int $uuid): Response {
