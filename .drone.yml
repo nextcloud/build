@@ -81,7 +81,9 @@ steps:
       commands:
           - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
           - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
-          - cd ../server/apps/$APP_NAME
+          - cd ../server/
+          - php occ app:enable $APP_NAME
+          - cd apps/$APP_NAME
           - make composer
           - cd tests/Unit/
           - phpunit --group DB --configuration phpunit.xml
@@ -94,7 +96,9 @@ steps:
       commands:
           - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
           - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
-          - cd ../server/apps/$APP_NAME
+          - cd ../server/
+          - php occ app:enable $APP_NAME
+          - cd apps/$APP_NAME
           - make composer
           - cd tests/Unit/
           - phpunit --group DB --configuration phpunit.xml
@@ -153,7 +157,7 @@ steps:
           - cd ../server
           - php occ app:enable $APP_NAME
           - cd apps/$APP_NAME
-          - make composermake composer
+          - make composer
           - cd tests/Unit/
           - phpunit --group DB --configuration phpunit.xml
 
