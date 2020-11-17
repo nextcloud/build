@@ -123,8 +123,8 @@ class AppService {
 		$columns = $this->columnMapper->findColumnsOfAppByUuid($uuid);
 		foreach ($columns as $column) {
 			$structure[$column->getTableId()]['columns'][$column->getId()] = $column->asArray();
-			if ($column->getDatatype() === 'multiple-choice') {
-				$options = $this->optionMapper->findOptionsForColumnByUuid($column->getId());
+			$options = $this->optionMapper->findOptionsForColumnByUuid($column->getId());
+			if (!empty($options)) {
 				$structure[$column->getTableId()]['columns'][$column->getId()]['options'] = [];
 				foreach ($options as $option) {
 					$structure[$column->getTableId()]['columns'][$column->getId()]['options'][] = $option->asArray();
