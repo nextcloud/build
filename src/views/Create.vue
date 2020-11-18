@@ -25,33 +25,33 @@
 <template>
 	<AppContent v-if="isLoadingApp">
 		<EmptyContent icon="icon-loading">
-			{{ t('build', 'Loading {appTitle} …', { appTitle }) }}
+			{{ t('build', 'Loading {appName} …', { appName }) }}
 		</EmptyContent>
 	</AppContent>
 
 	<AppContent v-else>
-		<!-- Apps title & description-->
+		<!-- Apps name & description-->
 		<header>
 			<h2>
-				<label class="hidden-visually" for="app-title">{{ t('build', 'App title') }}</label>
+				<label class="hidden-visually" for="app-name">{{ t('build', 'App name') }}</label>
 				<input
-					id="app-title"
-					ref="title"
-					v-model="app.title"
-					class="app-title"
+					id="app-name"
+					ref="name"
+					v-model="app.appinfo.name"
+					class="app-name"
 					:minlength="0"
-					:maxlength="maxStringLengths.appTitle"
-					:placeholder="t('build', 'App title')"
+					:maxlength="maxStringLengths.appName"
+					:placeholder="t('build', 'App name')"
 					:required="true"
 					autofocus
 					type="text"
 					@click="selectIfUnchanged"
-					@keyup="onTitleChange">
+					@keyup="onNameChange">
 			</h2>
 			<label class="hidden-visually" for="app-desc">{{ t('build', 'Description') }}</label>
 			<textarea
 				ref="description"
-				v-model="app.description"
+				v-model="app.appinfo.description"
 				class="app-desc"
 				:maxlength="maxStringLengths.appDescription"
 				:placeholder="t('build', 'Description')"
@@ -196,15 +196,15 @@ export default {
 			this.fetchFullApp(this.app.uuid)
 		},
 
-		// Update Window-Title on title change
-		'app.title'() {
-			SetWindowTitle(this.appTitle)
+		// Update Window-Title on app name change
+		'app.name'() {
+			SetWindowTitle(this.appName)
 		},
 	},
 
 	beforeMount() {
 		this.fetchFullApp(this.app.uuid)
-		SetWindowTitle(this.appTitle)
+		SetWindowTitle(this.appName)
 	},
 
 	updated() {
@@ -246,26 +246,26 @@ export default {
 					this.isLoadingApp = false
 				}
 			} finally {
-				if (this.app.title === '') {
-					this.focusTitle()
+				if (this.app.name === '') {
+					this.focusName()
 				}
 			}
 		},
 
 		/**
-		 * Focus title after app load
+		 * Focus name after app load
 		 */
-		focusTitle() {
+		focusName() {
 			this.$nextTick(() => {
-				this.$refs.title.focus()
+				this.$refs.name.focus()
 			})
 		},
 
 		/**
 		 * Title & description save methods
 		 */
-		onTitleChange: debounce(function() {
-			this.saveAppProperty('title')
+		onNameChange: debounce(function() {
+			this.saveAppProperty('name')
 		}, 200),
 		onDescChange: debounce(function() {
 			this.saveAppProperty('description')
@@ -365,11 +365,11 @@ export default {
 		},
 
 		/**
-		 * Select the text in the input if it is still set to 'App title'
+		 * Select the text in the input if it is still set to 'App name'
 		 * @param {Event} e the click event
 		 */
 		selectIfUnchanged(e) {
-			if (e.target && e.target.value === t('build', 'App title')) {
+			if (e.target && e.target.value === t('build', 'App name')) {
 				e.target.select()
 			}
 		},
@@ -400,7 +400,7 @@ export default {
 		max-width: 750px;
 	}
 
-	// Title & description header
+	// Name & description header
 	header {
 		display: flex;
 		flex-direction: column;
@@ -411,21 +411,21 @@ export default {
 			margin-bottom: 0; // because the input field has enough padding
 		}
 
-		.app-title,
+		.app-name,
 		.app-desc,
 		.info-message {
 			width: 100%;
 			padding: 0 16px;
 			border: none;
 		}
-		.app-title {
+		.app-name {
 			font-size: 28px;
 			font-weight: bold;
 			color: var(--color-main-text);
 			min-height: 36px;
 			margin: 32px 0;
 			padding-left: 14px; // align with description (compensate font size diff)
-			padding-bottom: 6px; // align with h2 of .app-title on submit page
+			padding-bottom: 6px; // align with h2 of .app-name on submit page
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;

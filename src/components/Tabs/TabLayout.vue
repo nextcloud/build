@@ -27,14 +27,16 @@
 		class="layout">
 		<LayoutPropsPicker
 			:app-columns="app.structure.table.columns"
-			:layouts="HomeLayouts"
-			:selected-layout="app.views.navigation.type"
-			:selected-layout-data="app.views.navigation" />
+			:layout="app.views.navigation"
+			:layouts="HomeLayouts">
+			{{ t('build', 'Navigation style') }}
+		</LayoutPropsPicker>
 		<LayoutPropsPicker
 			:app-columns="app.structure.table.columns"
-			:layouts="DetailsLayouts"
-			:selected-layout="app.views.details.type"
-			:selected-layout-data="app.views.details" />
+			:layout="app.views.details"
+			:layouts="DetailsLayouts">
+			{{ t('build', 'Details style') }}
+		</LayoutPropsPicker>
 	</AppSidebarTab>
 </template>
 

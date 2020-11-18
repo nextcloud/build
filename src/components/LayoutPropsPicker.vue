@@ -27,9 +27,9 @@
 			{{ t('build', 'Selected style: {style}', {style: layouts[0].name}) }}
 		</h3>
 		<h3 v-else>
-			{{ t('build', 'Style') }}
+			<slot />
 		</h3>
-		<ul v-if="layouts.length > 1 && false" class="layout__styles">
+		<ul v-if="layouts.length > 1 || true" class="layout__styles">
 			<li v-for="layout in layouts" :key="layout.id">
 				<button
 					class="layout__style-button"
@@ -53,12 +53,15 @@
 						:placeholder="t('build', 'Select matching data')"
 						:required="prop.required"
 						:user-select="true"
-						:value="selectedLayoutData[id]"
+						:value="value(id)"
 						class="layout__prop-picker"
-						label="name"
+						label="title"
 						track-by="uuid">
 						<template #noOptions>
 							{{ t('build', 'Please add a data matching the type {type}', { type: prop.type.name }) }}
+						</template>
+						<template #singleLabel="{ option }">
+							<ListItemIcon v-bind="option" :size="24" />
 						</template>
 					</Multiselect>
 				</label>
@@ -68,6 +71,7 @@
 </template>
 
 <script>
+import ListItemIcon from '@nextcloud/vue/dist/Components/ListItemIcon'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import getPropIcon from '../utils/PropIcon'
 
@@ -75,6 +79,7 @@ export default {
 	name: 'LayoutPropsPicker',
 
 	components: {
+		ListItemIcon,
 		Multiselect,
 	},
 
@@ -83,17 +88,13 @@ export default {
 			type: Array,
 			required: true,
 		},
-		selectedLayout: {
-			type: String,
-			default: null,
+		layout: {
+			type: Object,
+			default: () => ({}),
 		},
 		appColumns: {
 			type: Array,
 			default: () => [],
-		},
-		selectedLayoutData: {
-			type: Object,
-			default: () => ({}),
 		},
 	},
 	data() {
@@ -108,12 +109,22 @@ export default {
 		 * @returns {Object}
 		 */
 		selected() {
-			return this.layouts.find(layout => layout.id === this.selectedLayout)
+			return this.layouts.find(layout => layout.id === this.layout.type)
 				|| this.layouts.find(layout => layout.default)
 		},
 	},
 
 	methods: {
+		/**
+		 * Return the option matching the value if any
+		 * @param {string} uuid the selected column uuid
+		 * @returns {Object}
+		 */
+		value(uuid) {
+			const match = this.appColumns.find(column => column.uuid === this.layout[uuid])
+			return match && this.formatOption(match)
+		},
+
 		/**
 		 * Pull out every column that have a data that can provide the desired type
 		 * @param {any} type a js type
@@ -126,21 +137,21 @@ export default {
 				// If we have available ressources, format them properly
 				if (ressources.length > 0) {
 					// Format option text, e.g 'Customer (Display name)'
-					return ressources.map(ressource => {
-						ressource = Object.assign({}, ressource, {
-							// using the AvatarSelectOption layout to display icons and second lines
-							displayName: column.name,
-							desc: ressource?.name,
-							isNoUser: true,
-							icon: column.data.icon,
-						})
-						console.debug(ressource)
-						return ressource
-					})
+					return ressources.map(ressource => this.formatOption(column, ressource))
 				}
 				return []
 			}).flat()
 		},
+
+		formatOption(column, ressource = {}) {
+			return Object.assign({}, ressource, {
+				// using the ListItemIcon layout to display icons and second lines
+				title: column.name,
+				subtitle: ressource?.name,
+				isNoUser: true,
+				icon: column.data.icon,
+			})
+		}
 	},
 }
 </script>

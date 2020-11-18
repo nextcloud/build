@@ -23,7 +23,7 @@
 <template>
 	<AppSidebar
 		:active.sync="activeTab"
-		:title="appTitle">
+		:title="appName">
 		<TabLayout :app="app" />
 		<TabSettings :app="app" />
 	</AppSidebar>

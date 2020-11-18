@@ -37,7 +37,7 @@ export default {
 		 * Return app title or placeholder if not set
 		 * @returns {string}
 		 */
-		appTitle() {
+		appName() {
 			return this.app?.appinfo?.name || t('build', 'New app')
 		},
 	},

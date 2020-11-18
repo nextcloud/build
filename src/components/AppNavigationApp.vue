@@ -24,7 +24,7 @@
 	<AppNavigationItem
 		ref="navigationItem"
 		:icon="icon"
-		:title="appTitle"
+		:title="appName"
 		:to="{ name: 'designer', params: { uuid: app.uuid } }"
 		@click="mobileCloseNavigation">
 		<template #actions>
@@ -143,7 +143,7 @@ export default {
 		},
 
 		async onDeleteApp() {
-			if (!confirm(t('build', 'Are you sure you want to delete {title}?', { title: this.appTitle }))) {
+			if (!confirm(t('build', 'Are you sure you want to delete {title}?', { title: this.appName }))) {
 				return
 			}
 
@@ -153,7 +153,7 @@ export default {
 				await axios.delete(generateOcsUrl('apps/build/api/v1', 2) + `app/${this.app.uuid}`)
 				this.$emit('delete', this.app.uuid)
 			} catch (error) {
-				showError(t('build', 'Error while deleting {title}', { title: this.appTitle }))
+				showError(t('build', 'Error while deleting {title}', { title: this.appName }))
 				console.error(error.response)
 			} finally {
 				this.loading = false
