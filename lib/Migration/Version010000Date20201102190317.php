@@ -105,13 +105,8 @@ class Version010000Date20201102190317 extends SimpleMigrationStep {
 			$table->addColumn('default', Types::TEXT, [
 				'notnull' => false,
 			]);
-			$table->addColumn('options_id', Types::STRING, [
-				'notnull' => false,
-				'length' => '36',
-				'fixed' => true,
-			]);
 
-			$table->setPrimaryKey(['id']);
+			$table->setPrimaryKey(['id'], 'id_coldefs');
 		}
 
 		if (!$schema->hasTable('build_rows')) {
@@ -193,15 +188,15 @@ class Version010000Date20201102190317 extends SimpleMigrationStep {
 				'notnull' => true,
 				'length' => '128',
 			]);
-			$table->addColumn('key', Types::STRING, [
+			$table->addColumn('config_key', Types::STRING, [
 				'notnull' => true,
 				'length' => '128',
 			]);
-			$table->addColumn('val', Types::TEXT, [
+			$table->addColumn('config_value', Types::TEXT, [
 				'notnull' => false,
 			]);
 
-			$table->setPrimaryKey(['id']);
+			$table->setPrimaryKey(['id'], 'id_viewcfg');
 		}
 
 		if (!$schema->hasTable('build_column_changelog')) {
@@ -236,7 +231,7 @@ class Version010000Date20201102190317 extends SimpleMigrationStep {
 				'comment' => 'unix-timestamp',
 			]);
 
-			$table->setPrimaryKey(['id']);
+			$table->setPrimaryKey(['id'], 'id_colchg');
 		}
 
 		return $schema;

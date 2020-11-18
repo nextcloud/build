@@ -26,20 +26,27 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getColDefId()
- * @method void setColDefId(string $uuid)
- * @method string getVal()
- * @method void setVal(string $value)
- * @method int getOrder()
- * @method void setOrder(int $order)
+ * @method string getName()
+ * @method void setName(string $name)
+ * @method string getDescription()
+ * @method void setDescription(string $description)
+ * @method string getVersion()
+ * @method void setVersion(string $version)
+ * @method int getCreated()
+ * @method void setCreated(int $created)
+ * @method int getLastModified()
+ * @method void setLastModified(int $lastModified)
  */
-class Option extends ABuildEntity {
-	protected $colDefId;
-	protected $value;
-	protected $order;
+class App extends ABuildEntity {
+	protected $name;
+	protected $description;
+	protected $version;
+	protected $created;
+	protected $lastModified;
 
 	public function __construct() {
 		parent::__construct();
-		$this->addType('order', 'integer');
+		$this->addType('created', 'integer');
+		$this->addType('lastModified', 'integer');
 	}
 }

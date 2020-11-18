@@ -1,8 +1,10 @@
 <?php
+
+declare(strict_types=1);
 /**
- * @copyright Copyright (c) 2017 Kai Schröer <git@schroeer.co>
+ * @copyright Copyright (c) 2020 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
- * @author affan98 <affan98@gmail.com>
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,18 +19,17 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-if (!defined('PHPUNIT_RUN')) {
-	define('PHPUNIT_RUN', 1);
+namespace OCA\Build\Db;
+
+use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
+
+class RowMapper extends ABuildMapper {
+	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+		parent::__construct($db, $logger, 'build_rows', Row::class);
+	}
 }
-
-require_once __DIR__ . '/../../../lib/base.php';
-require_once __DIR__ . '/../vendor/autoload.php';
-
-\OC::$loader->addValidRoot(OC::$SERVERROOT . '/tests');
-\OC_App::loadApp('forms');
-
-\OC_Hook::clear();

@@ -74,7 +74,7 @@ return [
 		],
 		[
 			'name' => 'App#get',
-			'url' => '/api/v1/app/{buildAppId}',
+			'url' => '/api/v1/app/{uuid}',
 			'verb' => 'GET',
 		],
 		[

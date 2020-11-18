@@ -25,21 +25,23 @@ declare(strict_types=1);
 
 namespace OCA\Build\Db;
 
-/**
- * @method string getColDefId()
- * @method void setColDefId(string $uuid)
- * @method string getVal()
- * @method void setVal(string $value)
- * @method int getOrder()
- * @method void setOrder(int $order)
- */
-class Option extends ABuildEntity {
-	protected $colDefId;
-	protected $value;
-	protected $order;
+use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
 
-	public function __construct() {
-		parent::__construct();
-		$this->addType('order', 'integer');
+class TableMappper extends ABuildMapper {
+	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+		parent::__construct($db, $logger, 'build_tables', Table::class);
+	}
+
+	public function deleteByAppUuid(string $appUuid): bool {
+		$tables = $this->findTablesOfAppByUuid($appUuid);
+		return parent::_deleteByAppUuid($appUuid, $tables);
+	}
+
+	/**
+	 * @return Table[]
+	 */
+	public function findTablesOfAppByUuid(string $uuid): array {
+		return $this->findEntities($this->getFindEntitiesByAppUuidQuery($uuid));
 	}
 }

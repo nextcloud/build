@@ -26,20 +26,20 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getColDefId()
- * @method void setColDefId(string $uuid)
+ * @method string getRowId()
+ * @method void setRowId(string $uuid)
+ * @method string getColId()
+ * @method void setColId(string $uuid)
  * @method string getVal()
  * @method void setVal(string $value)
- * @method int getOrder()
- * @method void setOrder(int $order)
  */
-class Option extends ABuildEntity {
-	protected $colDefId;
-	protected $value;
-	protected $order;
+class Value extends ABuildEntity {
+	protected $rowId;
+	protected $colId;
+	protected $val;
 
 	public function __construct() {
 		parent::__construct();
-		$this->addType('order', 'integer');
+		$this->addType('val', 'text');
 	}
 }

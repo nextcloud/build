@@ -23,10 +23,13 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\Build\Controller\App;
+namespace OCA\Build\Controller;
 
 use OCA\Build\AppInfo\Application;
+use OCA\Build\Service\AppService;
 use OCA\Build\Service\Manifest;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
@@ -34,21 +37,42 @@ use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use function array_walk;
 
 class AppController extends OCSController {
 
 	/** @var Manifest */
 	private $manifestService;
+	/** @var AppService */
+	private $appService;
 
-	public function __construct(IRequest $request, Manifest $manifestService) {
+	public function __construct(IRequest $request, Manifest $manifestService, AppService $appService) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->manifestService = $manifestService;
+		$this->appService = $appService;
 	}
 
 	public function create(array $appData = null): Response {
-		// FIXME: pseudo code
+		$buildApp = $this->appService->newApp();
+
+		try {
+			array_walk($appData, function ($value, $key) use ($buildApp) {
+				if ($key === 'id') {
+					return;
+				}
+				$setter = 'set' . ucfirst($key);
+				$buildApp->$setter($value);
+			});
+		} catch (\InvalidArgumentException $e) {
+			$response = new DataResponse(['error' => $e->getMessage()]);
+			$response->setStatus(Http::STATUS_BAD_REQUEST);
+			return $response;
+		}
+
+		$buildApp = $this->appService->save($buildApp);
+
 		// perhaps also return app data
-		return new DataResponse(['buildAppId' => 23]);
+		return new DataResponse(['uuid' => $buildApp->getId()]);
 	}
 
 	public function import(string $manifest): Response {
@@ -62,41 +86,64 @@ class AppController extends OCSController {
 		}
 
 		// perhaps also return app data
-		$response->setData(['buildAppId' => 42]);
+		$response->setData(['uuid' => 42]);
 		return $response;
 	}
 
-	public function get(int $buildAppId): Response {
-		// FIXME: pseudo code
-		if (!in_array($buildAppId, [23, 42])) {
+	public function get(string $uuid): Response {
+		try {
+			$appInfo = $this->appService->getAppInfo($uuid);
+			$appData = [
+				'metadata' => [
+					'version' => Application::SCHEMA_VERSION,
+				],
+				'appinfo' => $appInfo,
+				'structure' => [],
+				'views' => [],
+			];
+		} catch (DoesNotExistException $e) {
 			return new NotFoundResponse();
+		} catch (MultipleObjectsReturnedException $e) {
+			$response = new Response();
+			$response->setStatus(Http::STATUS_CONFLICT);
 		}
 
-		// fetch real app data
-		$appData = [
-			'buildAppId' => $buildAppId,
-			'appName' => 'Dummy App ' . $buildAppId,
-		];
+		try {
+			$appData['structure'] = $this->appService->getStructure($uuid);
+		} catch (DoesNotExistException $e) {
+			// OK when not configured yet
+		}
 
-		return new JSONResponse($appData);
+		try {
+			$appData['views'] = $this->appService->getViews($uuid);
+		} catch (DoesNotExistException $e) {
+			// OK when not configured yet
+		}
+
+		$response = new JSONResponse($appData);
+		$d = \DateTime::createFromFormat('U', (string)$appData['appinfo']['lastModified']);
+		if ($d instanceof \DateTime) {
+			$response->setLastModified($d);
+		}
+		return $response;
 	}
 
-	public function export(int $buildAppId): Response {
+	public function export(int $uuid): Response {
 		// FIXME: pseudo code
-		if (!in_array($buildAppId, [23, 42])) {
+		if (!in_array($uuid, [23, 42])) {
 			return new NotFoundResponse();
 		}
 
 		// fetch real app data
 		$appData = [
-			'buildAppId' => $buildAppId,
-			'appName' => 'Dummy App ' . $buildAppId,
+			'uuid' => $uuid,
+			'appName' => 'Dummy App ' . $uuid,
 		];
 
 		return new JSONResponse(['manifest' => $this->manifestService->appDataToXML($appData)]);
 	}
 
-	public function update(int $buildAppId, string $key, string $value) {
+	public function update(int $uuid, string $key, string $value) {
 		// FIXME: pseudo code
 		// check valid id
 		// get app representation
@@ -105,9 +152,9 @@ class AppController extends OCSController {
 		return new Response();
 	}
 
-	public function delete(int $buildAppId) {
+	public function delete(int $uuid) {
 		// FIXME: pseudo code
-		if (!in_array($buildAppId, [23, 42])) {
+		if (!in_array($uuid, [23, 42])) {
 			return new NotFoundResponse();
 		}
 		// delete app definition from DB

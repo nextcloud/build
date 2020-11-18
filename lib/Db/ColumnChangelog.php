@@ -26,20 +26,31 @@ declare(strict_types=1);
 namespace OCA\Build\Db;
 
 /**
- * @method string getColDefId()
- * @method void setColDefId(string $uuid)
- * @method string getVal()
- * @method void setVal(string $value)
- * @method int getOrder()
- * @method void setOrder(int $order)
+ * @method string getValueId()
+ * @method void setValueId(string $uuid)
+ * @method string getEditorType()
+ * @method void setEditorType(string $editorType)
+ * @method string getEditorId()
+ * @method void setEditorId(string $editorId)
+ * @method string getOldValue()
+ * @method void setOldValue(string $value)
+ * @method string getNewValue()
+ * @method void setNewValue(string $value)
+ * @method int getMtime()
+ * @method void setMtime(int $mtime)
  */
-class Option extends ABuildEntity {
-	protected $colDefId;
-	protected $value;
-	protected $order;
+class ColumnChangelog extends ABuildEntity {
+	protected $valueId;
+	protected $editorType;
+	protected $editorId;
+	protected $oldValue;
+	protected $newValue;
+	protected $mtime;
 
 	public function __construct() {
 		parent::__construct();
-		$this->addType('order', 'integer');
+		$this->addType('oldValue', 'text');
+		$this->addType('newValue', 'text');
+		$this->addType('mtime', 'integer');
 	}
 }

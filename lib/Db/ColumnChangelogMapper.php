@@ -25,21 +25,11 @@ declare(strict_types=1);
 
 namespace OCA\Build\Db;
 
-/**
- * @method string getColDefId()
- * @method void setColDefId(string $uuid)
- * @method string getVal()
- * @method void setVal(string $value)
- * @method int getOrder()
- * @method void setOrder(int $order)
- */
-class Option extends ABuildEntity {
-	protected $colDefId;
-	protected $value;
-	protected $order;
+use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
 
-	public function __construct() {
-		parent::__construct();
-		$this->addType('order', 'integer');
+class ColumnChangelogMapper extends ABuildMapper {
+	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+		parent::__construct($db, $logger, 'build_column_changelog', ColumnChangelog::class);
 	}
 }
