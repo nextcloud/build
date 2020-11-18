@@ -31,20 +31,11 @@ return [
 	'routes' => [
 		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
 
-		// Before /{hash} to avoid conflict
+		// Before /{uuid} to avoid conflict
 		['name' => 'page#index', 'url' => '/new', 'verb' => 'GET', 'postfix' => 'create'],
-		['name' => 'page#index', 'url' => '/{hash}/edit', 'verb' => 'GET', 'postfix' => 'edit'],
-		['name' => 'page#index', 'url' => '/{hash}/clone', 'verb' => 'GET', 'postfix' => 'clone'],
-		['name' => 'page#index', 'url' => '/{hash}/results', 'verb' => 'GET', 'postfix' => 'results'],
+		['name' => 'page#index', 'url' => '/{uuid}', 'verb' => 'GET', 'postfix' => 'edit'],
 	],
 	'ocs' => [
-		// Forms
-		['name' => 'api#getForms', 'url' => '/api/v1/forms', 'verb' => 'GET'],
-		['name' => 'api#newForm', 'url' => '/api/v1/form', 'verb' => 'POST'],
-		['name' => 'api#getForm', 'url' => '/api/v1/form/{id}', 'verb' => 'GET'],
-		['name' => 'api#updateForm', 'url' => '/api/v1/form/update', 'verb' => 'POST'],
-		['name' => 'api#deleteForm', 'url' => '/api/v1/form/{id}', 'verb' => 'DELETE'],
-
 		// Questions
 		['name' => 'api#newQuestion', 'url' => '/api/v1/question', 'verb' => 'POST'],
 		['name' => 'api#updateQuestion', 'url' => '/api/v1/question/update', 'verb' => 'POST'],
@@ -62,6 +53,7 @@ return [
 
 		['name' => 'api#insertSubmission', 'url' => '/api/v1/submission/insert', 'verb' => 'POST'],
 		['name' => 'api#deleteSubmission', 'url' => '/api/v1/submission/{id}', 'verb' => 'DELETE'],
+	
 		[
 			'name' => 'App#create',
 			'url' => '/api/v1/app',
@@ -79,18 +71,28 @@ return [
 		],
 		[
 			'name' => 'App#export',
-			'url' => '/api/v1/app/export/{buildAppId}',
+			'url' => '/api/v1/app/export/{uuid}',
 			'verb' => 'GET',
 		],
 		[
 			'name' => 'App#update',
-			'url' => '/api/v1/app/{buildAppId}',
+			'url' => '/api/v1/app/{uuid}',
 			'verb' => 'PUT',
 		],
 		[
 			'name' => 'App#delete',
-			'url' => '/api/v1/app/{buildAppId}',
+			'url' => '/api/v1/app/{uuid}',
 			'verb' => 'GET',
+		],
+		[
+			'name' => 'App#install',
+			'url' => '/api/v1/app/install/{uuid}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'App#uninstall',
+			'url' => '/api/v1/app/install/{uuid}',
+			'verb' => 'DELETE',
 		]
 	]
 ];
