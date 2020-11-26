@@ -73,9 +73,22 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="headline" type="uuid" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="icon" type="uuid" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="subline" type="uuid" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="type" type="non-empty-string" minOccurs="1"/>
+			<xs:element name="headline" type="viewElement" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="icon" type="viewElement" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="subline" type="viewElement" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="viewElement">
+		<xs:annotation>
+			<xs:documentation>
+				All tags will contain a reference to an existing column
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="uuid" type="uuid" minOccurs="1"/>
+			<xs:element name="type" type="non-empty-string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 
