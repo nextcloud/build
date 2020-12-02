@@ -76,7 +76,7 @@
 			<xs:element name="type" type="non-empty-string" minOccurs="1"/>
 			<xs:element name="headline" type="viewElement" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="icon" type="viewElement" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="subline" type="viewElement" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="subheading" type="viewElement" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 
