@@ -32,6 +32,7 @@ use OCA\Build\Db\ColumnMapper;
 use OCA\Build\Db\OptionMapper;
 use OCA\Build\Db\Table;
 use OCA\Build\Db\TableMappper;
+use OCA\Build\Db\ViewConfiguration;
 use OCA\Build\Db\ViewConfigurationMapper;
 use OCA\Build\Service\AppService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -212,5 +213,64 @@ class AppServiceTest extends TestCase {
 
 		$this->expectException(DoesNotExistException::class);
 		$this->service->getViews($uuid);
+	}
+
+	public function testGetViews() {
+		$uuid = '8d2d7771-4bc9-4c17-a446-72717fb931d7';
+
+		$navigationViewArray = $detailViewArray = [
+			'appId' => $uuid,
+			'viewId' => '',
+			'configuration' => [
+				'type' => 'list',
+				'headline' =>
+					[
+						'uuid' => '15ac48bd-745d-404b-aa52-b94914f4b3f8',
+						'type' => 'displayname',
+					],
+				'subheading' =>
+					[
+						'uuid' => 'a581e566-1e0b-4c90-927d-3ad51780b4ef',
+						'type' => 'qr',
+					],
+				'icon' =>
+					[
+						'uuid' => '9ed11803-97ff-493b-a10c-b47808506514',
+					],
+			],
+			'uuid' => '',
+		];
+		$navigationViewArray['viewId'] = ViewConfiguration::ID_NAVIGATION;
+		$navigationViewArray['uuid'] = '40ef85e6-3745-4416-ae48-e4272a12934a';
+		$detailViewArray['viewId'] = ViewConfiguration::ID_DETAIL;
+		$detailViewArray['uuid'] = 'e9c6f0b8-c3b8-4686-ac7c-803b14b83804';
+
+		$navigationView = $this->createMock(ViewConfiguration::class);
+		$navigationView->expects($this->any())
+			->method('getViewId')
+			->willReturn(ViewConfiguration::ID_NAVIGATION);
+		$navigationView->expects($this->any())
+			->method('asArray')
+			->willReturn($navigationViewArray);
+
+		$detailView = $this->createMock(ViewConfiguration::class);
+		$detailView->expects($this->any())
+			->method('getViewId')
+			->willReturn(ViewConfiguration::ID_DETAIL);
+		$detailView->expects($this->any())
+			->method('asArray')
+			->willReturn($detailViewArray);
+
+		$this->viewMapper->expects($this->once())
+			->method('findViewsOfAppByUuid')
+			->with($uuid)
+			->willReturn([$navigationView, $detailView]);
+
+		$views = $this->service->getViews($uuid);
+		$this->assertSame(2, count('views'));
+		$this->assertArrayHasKey(ViewConfiguration::ID_NAVIGATION, $views);
+		$this->assertArrayHasKey(ViewConfiguration::ID_DETAIL, $views);
+		$this->assertIsArray($views[ViewConfiguration::ID_NAVIGATION]);
+		$this->assertIsArray($views[ViewConfiguration::ID_DETAIL]);
 	}
 }

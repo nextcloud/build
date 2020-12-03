@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Build\Test\Controller;
 
 use OCA\Build\AppInfo\Application;
+use OCA\Build\Db\ViewConfiguration;
 use OCA\Build\Service\AppService;
 use OCA\Build\Service\Manifest;
 use OCP\AppFramework\Http\JSONResponse;
@@ -102,16 +103,30 @@ class AppControllerTest extends TestCase {
 			]
 		];
 		$views = [
-			'navigation' => [
+			ViewConfiguration::ID_NAVIGATION => [
 				'type' => 'list',
-				'title' => '190abcc5-3023-457f-96a3-683404326956',
-				'image' => '1aa648a7-7129-44ba-b96d-bb2c5cac10b2',
+				'headline' => [
+					'uuid' => '190abcc5-3023-457f-96a3-683404326956',
+					'type' => 'displayname',
+				],
+				'subheading' => [],
+				'icon' => [
+					'uuid' => '1aa648a7-7129-44ba-b96d-bb2c5cac10b2',
+				],
 			],
-			'details' => [
+			ViewConfiguration::ID_DETAIL => [
 				'type' => 'avatar-header',
-				'title' => '190abcc5-3023-457f-96a3-683404326956',
-				'image' => '1aa648a7-7129-44ba-b96d-bb2c5cac10b2',
-				'subtitle' => 'c4e8610f-9c55-47c0-8506-18c548dae25e',
+				'headline' => [
+					'uuid' => '190abcc5-3023-457f-96a3-683404326956',
+					'type' => 'displayname',
+				],
+				'subheading' => [
+					'uuid' => 'c4e8610f-9c55-47c0-8506-18c548dae25e',
+					'type' => 'phonenumber'
+				],
+				'icon' => [
+					'uuid' => '1aa648a7-7129-44ba-b96d-bb2c5cac10b2',
+				],
 			],
 		];
 		$expected = \json_encode([
