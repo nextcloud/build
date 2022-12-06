@@ -6,7 +6,7 @@
     <summary>Create Nextcloud Build apps</summary>
     <description><![CDATA[Tool to create and modify Nextcloud Build apps]]></description>
 
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <licence>agpl</licence>
 
 	<author mail="blizzz@arthur-schiwon.de">blizzz></author>

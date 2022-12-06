@@ -126,7 +126,7 @@ class Version010000Date20201102190317 extends SimpleMigrationStep {
 			$table->addUniqueIndex(['id', 'table_id'], 'idx_tbl_row');
 		}
 
-		if (!$schema->hasTable('build_values')) {
+		if (!$schema->hasTable('build_column_values')) {
 			$table = $schema->createTable('build_column_values');
 			$table->addColumn('id', Types::STRING, [
 				'notnull' => true,
@@ -175,9 +175,10 @@ class Version010000Date20201102190317 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('build_view_configuration')) {
 			$table = $schema->createTable('build_view_configuration');
-			$table->addColumn('id', Types::INTEGER, [
-				'autoincrement' => true,
+			$table->addColumn('id', Types::STRING, [
 				'notnull' => true,
+				'length' => '36',
+				'fixed' => true,
 			]);
 			$table->addColumn('app_id', Types::STRING, [
 				'notnull' => true,
@@ -188,11 +189,7 @@ class Version010000Date20201102190317 extends SimpleMigrationStep {
 				'notnull' => true,
 				'length' => '128',
 			]);
-			$table->addColumn('config_key', Types::STRING, [
-				'notnull' => true,
-				'length' => '128',
-			]);
-			$table->addColumn('config_value', Types::TEXT, [
+			$table->addColumn('configuration', Types::TEXT, [
 				'notnull' => false,
 			]);
 

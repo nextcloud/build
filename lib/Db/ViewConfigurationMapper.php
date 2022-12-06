@@ -39,4 +39,9 @@ class ViewConfigurationMapper extends ABuildMapper {
 	public function findViewsOfAppByUuid(string $uuid): array {
 		return $this->findEntities($this->getFindEntitiesByAppUuidQuery($uuid));
 	}
+
+	public function deleteByAppUuid(string $appUuid): bool {
+		$entities = $this->findViewsOfAppByUuid($appUuid);
+		return parent::_deleteByAppUuid($appUuid, $entities);
+	}
 }
