@@ -23,92 +23,80 @@
   -->
 
 <template>
-	<AppContent v-if="isLoadingForm">
+	<AppContent v-if="isLoadingApp">
 		<EmptyContent icon="icon-loading">
-			{{ t('build', 'Loading {title} …', { title: form.title }) }}
+			{{ t('build', 'Loading {appName} …', { appName }) }}
 		</EmptyContent>
 	</AppContent>
 
 	<AppContent v-else>
-		<!-- Show results & sidebar button -->
-		<TopBar>
-			<button @click="showResults">
-				<span class="icon-comment" role="img" />
-				{{ t('build', 'Responses') }}
-			</button>
-			<button v-tooltip="t('build', 'Toggle settings')"
-				@click="toggleSidebar">
-				<span class="icon-menu-sidebar" role="img" />
-			</button>
-		</TopBar>
-
-		<!-- Forms title & description-->
+		<!-- Apps name & description-->
 		<header>
 			<h2>
-				<label class="hidden-visually" for="form-title">{{ t('build', 'Form title') }}</label>
+				<label class="hidden-visually" for="app-name">{{ t('build', 'App name') }}</label>
 				<input
-					id="form-title"
-					ref="title"
-					v-model="form.title"
-					class="form-title"
+					id="app-name"
+					ref="name"
+					v-model="app.appinfo.name"
+					class="app-name"
 					:minlength="0"
-					:maxlength="maxStringLengths.formTitle"
-					:placeholder="t('build', 'Form title')"
+					:maxlength="maxStringLengths.appName"
+					:placeholder="t('build', 'App name')"
 					:required="true"
 					autofocus
 					type="text"
 					@click="selectIfUnchanged"
-					@keyup="onTitleChange">
+					@keyup="onNameChange">
 			</h2>
-			<label class="hidden-visually" for="form-desc">{{ t('build', 'Description') }}</label>
+			<label class="hidden-visually" for="app-desc">{{ t('build', 'Description') }}</label>
 			<textarea
 				ref="description"
-				v-model="form.description"
-				class="form-desc"
-				:maxlength="maxStringLengths.formDescription"
+				v-model="app.appinfo.description"
+				class="app-desc"
+				:maxlength="maxStringLengths.appDescription"
 				:placeholder="t('build', 'Description')"
 				@change="autoSizeDescription"
 				@keydown="autoSizeDescription"
 				@keyup="onDescChange" />
-			<!-- Generate form information message-->
+			<!-- Generate app inappation message-->
 			<p class="info-message" v-text="infoMessage" />
 		</header>
 
 		<section>
-			<!-- Questions list -->
-			<Draggable v-model="form.questions"
+			<!-- Data list -->
+			<Draggable v-model="app.data"
 				:animation="200"
 				tag="ul"
-				handle=".question__drag-handle"
-				@change="onQuestionOrderChange"
+				handle=".data__drag-handle"
+				@change="onDataOrderChange"
 				@start="isDragging = true"
 				@end="isDragging = false">
-				<Questions
-					:is="answerTypes[question.type].component"
-					v-for="(question, index) in form.questions"
-					ref="questions"
-					:key="question.id"
-					:answer-type="answerTypes[question.type]"
+				<Data
+					:is="DataTypes[data.type].component"
+					v-for="(data, index) in app.data"
+					ref="data"
+					:key="data.id"
+					:answer-type="DataTypes[data.type]"
 					:index="index + 1"
 					:max-string-lengths="maxStringLengths"
-					v-bind.sync="form.questions[index]"
-					@delete="deleteQuestion(question)" />
+					v-bind.sync="app.data[index]"
+					@delete="deleteData(data)" />
 			</Draggable>
 
-			<!-- Add new questions toolbar -->
-			<div class="question-toolbar" role="toolbar">
-				<Actions ref="questionMenu"
-					:open.sync="questionMenuOpened"
-					:menu-title="t('build', 'Add a question')"
+			<!-- Add new data toolbar -->
+			<div class="data-toolbar" role="toolbar">
+				<Actions ref="dataMenu"
+					:open.sync="dataMenuOpened"
+					:menu-title="t('build', 'Add data type')"
 					:primary="true"
-					:default-icon="isLoadingQuestions ? 'icon-loading-small' : 'icon-add-primary'">
-					<ActionButton v-for="(answer, type) in answerTypes"
+					:default-icon="isLoadingData ? 'icon-loading-small' : 'icon-add-primary'">
+					<ActionButton v-for="(answer, type) in DataTypes"
 						:key="answer.label"
 						:close-after-click="true"
-						:disabled="isLoadingQuestions"
+						:disabled="isLoadingData"
 						:icon="answer.icon"
-						class="question-toolbar__question"
-						@click="addQuestion(type)">
+						class="data-toolbar__data"
+						@click="addData(type)">
 						{{ answer.label }}
 					</ActionButton>
 				</Actions>
@@ -118,7 +106,6 @@
 </template>
 
 <script>
-import { emit } from '@nextcloud/event-bus'
 import { generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import { showError } from '@nextcloud/dialogs'
@@ -129,14 +116,14 @@ import Draggable from 'vuedraggable'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
-import answerTypes from '../models/AnswerTypes'
+import DataTypes from '../models/DataTypes'
 import CancelableRequest from '../utils/CancelableRequest'
-import EmptyContent from '../components/EmptyContent'
-import Question from '../components/Questions/Question'
-import QuestionLong from '../components/Questions/QuestionLong'
-import QuestionMultiple from '../components/Questions/QuestionMultiple'
-import QuestionShort from '../components/Questions/QuestionShort'
+import Data from '../components/Data/Data'
+import DataTextLong from '../components/Data/DataTextLong'
+import DataTextMultiple from '../components/Data/DataTextMultiple'
+import DataTextShort from '../components/Data/DataTextShort'
 import TopBar from '../components/TopBar'
 import ViewsMixin from '../mixins/ViewsMixin'
 import SetWindowTitle from '../utils/SetWindowTitle'
@@ -151,10 +138,10 @@ export default {
 		AppContent,
 		Draggable,
 		EmptyContent,
-		Question,
-		QuestionLong,
-		QuestionShort,
-		QuestionMultiple,
+		Data,
+		DataTextLong,
+		DataTextMultiple,
+		DataTextShort,
 		TopBar,
 	},
 
@@ -164,70 +151,60 @@ export default {
 		return {
 			maxStringLengths: loadState('build', 'maxStringLengths'),
 
-			questionMenuOpened: false,
-			answerTypes,
+			dataMenuOpened: false,
+			DataTypes,
 
 			// Various states
-			isLoadingForm: true,
-			isLoadingQuestions: false,
-			errorForm: false,
+			isLoadingApp: true,
+			isLoadingData: false,
+			errorApp: false,
 
 			isDragging: false,
 
 			// storage for axios cancel function
-			cancelFetchFullForm: () => {},
+			cancelFetchFullApp: () => {},
 		}
 	},
 
 	computed: {
-		/**
-		 * Return form title, or placeholder if not set
-		 * @returns {string}
-		 */
-		formTitle() {
-			if (this.form.title) {
-				return this.form.title
-			}
-			return t('build', 'New form')
-		},
 
-		hasQuestions() {
-			return this.form.questions && this.form.questions.length === 0
+		hasData() {
+			return this.app?.data && this.app.data.length === 0
 		},
 
 		isMandatoryUsed() {
-			return this.form.questions.reduce((isUsed, question) => isUsed || question.mandatory, false)
+			return this.hasData && this.app.data.reduce((isUsed, data) => isUsed || data.mandatory, false)
 		},
 
 		infoMessage() {
 			let message = ''
-			if (this.form.isAnonymous) {
+			if (this.app.isAnonymous) {
 				message += t('build', 'Responses are anonymous.')
 			} else {
 				message += t('build', 'Responses are connected to your Nextcloud account.')
 			}
 			if (this.isMandatoryUsed) {
-				message += ' ' + t('build', 'An asterisk (*) indicates mandatory questions.')
+				message += ' ' + t('build', 'An asterisk (*) indicates mandatory data.')
 			}
 			return message
 		},
 	},
 
 	watch: {
-		// Fetch full form on change
+		// Fetch full app on change
 		hash() {
-			this.fetchFullForm(this.form.id)
+			this.fetchFullApp(this.app.uuid)
 		},
 
-		// Update Window-Title on title change
-		'form.title'() {
-			SetWindowTitle(this.formTitle)
+		// Update Window-Title on app name change
+		'app.name'() {
+			SetWindowTitle(this.appName)
 		},
 	},
 
 	beforeMount() {
-		this.fetchFullForm(this.form.id)
-		SetWindowTitle(this.formTitle)
+		this.fetchFullApp(this.app.uuid)
+		SetWindowTitle(this.appName)
 	},
 
 	updated() {
@@ -236,178 +213,163 @@ export default {
 
 	methods: {
 		/**
-		 * Fetch the full form data and update parent
+		 * Fetch the full app data and update parent
 		 *
-		 * @param {number} id the unique form hash
+		 * @param {number} id the unique app hash
 		 */
-		async fetchFullForm(id) {
-			this.isLoadingForm = true
+		async fetchFullApp(id) {
+			this.isLoadingApp = true
 
 			// Cancel previous request
-			this.cancelFetchFullForm('New request pending.')
+			this.cancelFetchFullApp('New request pending')
 
 			// Output after cancelling previous request for logical order.
-			console.debug('Loading form', id)
+			console.debug('Loading app', id)
 
 			// Create new cancelable get request
 			const { request, cancel } = CancelableRequest(async function(url, requestOptions) {
 				return axios.get(url, requestOptions)
 			})
 			// Store cancel-function
-			this.cancelFetchFullForm = cancel
+			this.cancelFetchFullApp = cancel
 
 			try {
-				const form = await request(generateOcsUrl('apps/forms/api/v1', 2) + `form/${id}`)
-				this.$emit('update:form', form.data)
-				this.isLoadingForm = false
+				const app = await request(generateOcsUrl('apps/build/api/v1', 2) + `app/${id}`)
+				this.$emit('update:app', app.data)
+				this.isLoadingApp = false
 			} catch (error) {
 				if (axios.isCancel(error)) {
-					console.debug('The request for form', id, 'has been canceled.', error)
+					console.debug('The request for app', id, 'has been canceled.', error)
 				} else {
 					console.error(error)
-					this.errorForm = true
-					this.isLoadingForm = false
+					this.errorApp = true
+					this.isLoadingApp = false
 				}
 			} finally {
-				if (this.form.title === '') {
-					this.focusTitle()
+				if (this.app.name === '') {
+					this.focusName()
 				}
 			}
 		},
 
 		/**
-		 * Focus title after form load
+		 * Focus name after app load
 		 */
-		focusTitle() {
+		focusName() {
 			this.$nextTick(() => {
-				this.$refs.title.focus()
+				this.$refs.name.focus()
 			})
 		},
 
 		/**
 		 * Title & description save methods
 		 */
-		onTitleChange: debounce(function() {
-			this.saveFormProperty('title')
+		onNameChange: debounce(function() {
+			this.saveAppProperty('name')
 		}, 200),
 		onDescChange: debounce(function() {
-			this.saveFormProperty('description')
+			this.saveAppProperty('description')
 		}, 200),
 
 		/**
-		 * Add a new question to the current form
+		 * Add a new data to the current app
 		 *
-		 * @param {string} type the question type, see AnswerTypes
+		 * @param {string} type the data type, see DataTypes
 		 */
-		async addQuestion(type) {
+		async addData(type) {
 			const text = ''
-			this.isLoadingQuestions = true
+			this.isLoadingData = true
 
 			try {
-				const response = await axios.post(generateOcsUrl('apps/forms/api/v1', 2) + 'question', {
-					formId: this.form.id,
+				const response = await axios.post(generateOcsUrl('apps/build/api/v1', 2) + 'data', {
+					appId: this.app.uuid,
 					type,
 					text,
 				})
-				const question = response.data
+				const data = response.data
 
-				// Add newly created question
-				this.form.questions.push(Object.assign({
+				// Add newly created data
+				this.app.data.push(Object.assign({
 					text,
 					type,
 					answers: [],
-				}, question))
+				}, data))
 
-				// Focus newly added question
+				// Focus newly added data
 				this.$nextTick(() => {
-					const lastQuestion = this.$refs.questions[this.$refs.questions.length - 1]
-					lastQuestion.focus()
+					const lastData = this.$refs.data[this.$refs.data.length - 1]
+					lastData.focus()
 				})
 
 			} catch (error) {
 				console.error(error)
-				showError(t('build', 'There was an error while adding the new question'))
+				showError(t('build', 'There was an error while adding the new data'))
 			} finally {
-				this.isLoadingQuestions = false
+				this.isLoadingData = false
 			}
 		},
 
 		/**
-		 * Delete a question
+		 * Delete a data
 		 *
-		 * @param {Object} question the question to delete
-		 * @param {number} question.id the question id to delete
+		 * @param {Object} data the data to delete
+		 * @param {number} data.id the data id to delete
 		 */
-		async deleteQuestion({ id }) {
-			this.isLoadingQuestions = true
+		async deleteData({ id }) {
+			this.isLoadingData = true
 
 			try {
-				await axios.delete(generateOcsUrl('apps/forms/api/v1', 2) + `question/${id}`)
-				const index = this.form.questions.findIndex(search => search.id === id)
-				this.form.questions.splice(index, 1)
+				await axios.delete(generateOcsUrl('apps/build/api/v1', 2) + `data/${id}`)
+				const index = this.app.data.findIndex(search => search.id === id)
+				this.app.data.splice(index, 1)
 			} catch (error) {
 				console.error(error)
-				showError(t('build', 'There was an error while removing the question'))
+				showError(t('build', 'There was an error while removing the data'))
 			} finally {
-				this.isLoadingQuestions = false
+				this.isLoadingData = false
 			}
 		},
 
 		/**
-		 * Reorder questions on dragEnd
+		 * Reorder data on dragEnd
 		 */
-		async onQuestionOrderChange() {
-			this.isLoadingQuestions = true
-			const newOrder = this.form.questions.map(question => question.id)
+		async onDataOrderChange() {
+			this.isLoadingData = true
+			const newOrder = this.app.data.map(data => data.id)
 
 			try {
-				await axios.post(generateOcsUrl('apps/forms/api/v1', 2) + 'question/reorder', {
-					formId: this.form.id,
+				await axios.post(generateOcsUrl('apps/build/api/v1', 2) + 'data/reorder', {
+					appId: this.app.uuid,
 					newOrder,
 				})
 			} catch (error) {
-				showError(t('build', 'Error while saving form'))
+				showError(t('build', 'Error while saving app'))
 				console.error(error)
 			} finally {
-				this.isLoadingQuestions = false
+				this.isLoadingData = false
 			}
 		},
 
 		/**
-		 * Add question methods
+		 * Add data methods
 		 */
-		openQuestionMenu() {
+		openDataMenu() {
 			// TODO: fix the vue components to allow external click triggers without
 			// conflicting with the click outside directive
 			setTimeout(() => {
-				this.questionMenuOpened = true
+				this.dataMenuOpened = true
 				this.$nextTick(() => {
-					this.$refs.questionMenu.focusFirstAction()
+					this.$refs.dataMenu.focusFirstAction()
 				})
 			}, 10)
 		},
 
 		/**
-		 * Topbar methods
-		 */
-		showResults() {
-			this.$router.push({
-				name: 'results',
-				params: {
-					hash: this.form.hash,
-				},
-			})
-		},
-		toggleSidebar() {
-			emit('toggleSidebar')
-		},
-
-		/**
-		 * Select the text in the input if it is still set to 'Form title'
+		 * Select the text in the input if it is still set to 'App name'
 		 * @param {Event} e the click event
 		 */
 		selectIfUnchanged(e) {
-			if (e.target && e.target.value === t('build', 'Form title')) {
+			if (e.target && e.target.value === t('build', 'App name')) {
 				e.target.select()
 			}
 		},
@@ -438,7 +400,7 @@ export default {
 		max-width: 750px;
 	}
 
-	// Title & description header
+	// Name & description header
 	header {
 		display: flex;
 		flex-direction: column;
@@ -449,26 +411,26 @@ export default {
 			margin-bottom: 0; // because the input field has enough padding
 		}
 
-		.form-title,
-		.form-desc,
+		.app-name,
+		.app-desc,
 		.info-message {
 			width: 100%;
 			padding: 0 16px;
 			border: none;
 		}
-		.form-title {
+		.app-name {
 			font-size: 28px;
 			font-weight: bold;
 			color: var(--color-main-text);
 			min-height: 36px;
 			margin: 32px 0;
 			padding-left: 14px; // align with description (compensate font size diff)
-			padding-bottom: 6px; // align with h2 of .form-title on submit page
+			padding-bottom: 6px; // align with h2 of .app-name on submit page
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 		}
-		.form-desc {
+		.app-desc {
 			font-size: 100%;
 			line-height: 150%;
 			padding-bottom: 20px;
@@ -492,14 +454,14 @@ export default {
 		}
 	}
 
-	// Questions container
+	// Data container
 	section {
 		position: relative;
 		display: flex;
 		flex-direction: column;
 		margin-bottom: 250px;
 
-		.question-toolbar {
+		.data-toolbar {
 			position: sticky;
 			// Above other menus
 			z-index: 55;

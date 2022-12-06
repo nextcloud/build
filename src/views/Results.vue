@@ -120,15 +120,16 @@
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { Parser } from 'json2csv'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import axios from '@nextcloud/axios'
 import Clipboard from 'v-clipboard'
 import moment from '@nextcloud/moment'
 import Vue from 'vue'
 
-import EmptyContent from '../components/EmptyContent'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import AppContent from '@nextcloud/vue/dist/Components/AppContent'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+
 import Summary from '../components/Results/Summary'
 import Submission from '../components/Results/Submission'
 import TopBar from '../components/TopBar'
@@ -199,7 +200,7 @@ export default {
 		},
 
 		copyShareLink(event) {
-			const $formLink = window.location.protocol + '//' + window.location.host + generateUrl(`/apps/forms/${this.form.hash}`)
+			const $formLink = window.location.protocol + '//' + window.location.host + generateUrl(`/apps/build/${this.form.hash}`)
 			if (this.$clipboard($formLink)) {
 				showSuccess(t('build', 'Form link copied'))
 			} else {
@@ -214,7 +215,7 @@ export default {
 			console.debug('Loading results for form', this.form.hash)
 
 			try {
-				const response = await axios.get(generateOcsUrl('apps/forms/api/v1', 2) + `submissions/${this.form.hash}`)
+				const response = await axios.get(generateOcsUrl('apps/build/api/v1', 2) + `submissions/${this.form.hash}`)
 
 				// Append questions & submissions
 				this.$set(this.form, 'submissions', response.data.submissions)
@@ -231,7 +232,7 @@ export default {
 			this.loadingResults = true
 
 			try {
-				await axios.delete(generateOcsUrl('apps/forms/api/v1', 2) + `submission/${id}`)
+				await axios.delete(generateOcsUrl('apps/build/api/v1', 2) + `submission/${id}`)
 				const index = this.form.submissions.findIndex(search => search.id === id)
 				this.form.submissions.splice(index, 1)
 			} catch (error) {
@@ -249,7 +250,7 @@ export default {
 
 			this.loadingResults = true
 			try {
-				await axios.delete(generateOcsUrl('apps/forms/api/v1', 2) + `submissions/${this.form.id}`)
+				await axios.delete(generateOcsUrl('apps/build/api/v1', 2) + `submissions/${this.form.id}`)
 				this.form.submissions = []
 			} catch (error) {
 				console.error(error)

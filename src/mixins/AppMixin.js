@@ -1,3 +1,4 @@
+
 /**
  * @copyright Copyright (c) 2020 John Molakvoæ <skjnldsv@protonmail.com>
  *
@@ -17,14 +18,44 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-// Various variables used by this app
-:root {
-	--header-height: $header-height;
-	--top-bar-height: 60px;
-}
+import { generateOcsUrl } from '@nextcloud/router'
+import { showError } from '@nextcloud/dialogs'
+import axios from '@nextcloud/axios'
 
-@import 'variables';
-@import 'icons';
+export default {
+	props: {
+		app: {
+			type: Object,
+			required: true,
+		},
+	},
+
+	computed: {
+		/**
+		 * Return app title or placeholder if not set
+		 * @returns {string}
+		 */
+		appName() {
+			return this.app?.appinfo?.name || t('build', 'New app')
+		},
+	},
+
+	methods: {
+		async saveAppProperty(key) {
+			try {
+				// TODO: add loading status feedback ?
+				await axios.post(generateOcsUrl('apps/build/api/v1', 2) + 'app/update', {
+					buildAppId: this.app.appinfo.uuid,
+					key,
+					value: this.app[key],
+				})
+			} catch (error) {
+				showError(t('build', 'Error while saving app'))
+				console.error(error)
+			}
+		},
+	},
+
+}

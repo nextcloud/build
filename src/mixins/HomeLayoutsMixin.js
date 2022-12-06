@@ -19,16 +19,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AppMixin from './AppMixin'
-
 export default {
 	props: {
-		uuid: {
-			type: String,
-			default: '',
+		list: {
+			type: Array,
+			default: () => [],
 		},
 	},
-
-	mixins: [AppMixin],
-
 }

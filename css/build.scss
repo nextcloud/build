@@ -19,13 +19,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
-#header .header-shared-by  {
-	color: var(--color-primary-text);
-	position: relative;
-	font-weight: 300;
-	font-size: 11px;
-	line-height: 11px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+
+// Various variables used by this app
+:root {
+	--top-bar-height: 60px;
 }
+
+@import 'icons';

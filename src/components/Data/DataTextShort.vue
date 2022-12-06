@@ -51,12 +51,12 @@
 </template>
 
 <script>
-import QuestionMixin from '../../mixins/QuestionMixin'
+import DataMixin from '../../mixins/DataMixin'
 
 export default {
-	name: 'QuestionShort',
+	name: 'DataTextShort',
 
-	mixins: [QuestionMixin],
+	mixins: [DataMixin],
 
 	computed: {
 		submissionInputPlaceholder() {

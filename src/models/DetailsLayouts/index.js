@@ -1,3 +1,4 @@
+
 /**
  * @copyright Copyright (c) 2020 John Molakvoæ <skjnldsv@protonmail.com>
  *
@@ -19,16 +20,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AppMixin from './AppMixin'
+import AvatarHeaderLayout from './AvatarHeaderLayout'
 
-export default {
-	props: {
-		uuid: {
-			type: String,
-			default: '',
-		},
-	},
-
-	mixins: [AppMixin],
-
-}
+export default [
+	AvatarHeaderLayout,
+]

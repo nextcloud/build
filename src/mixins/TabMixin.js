@@ -1,3 +1,4 @@
+
 /**
  * @copyright Copyright (c) 2020 John Molakvoæ <skjnldsv@protonmail.com>
  *
@@ -18,17 +19,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 import AppMixin from './AppMixin'
 
 export default {
-	props: {
-		uuid: {
-			type: String,
-			default: '',
-		},
-	},
-
 	mixins: [AppMixin],
 
+	computed: {
+		// Forward this to tabs since we wrap them
+		// Unfortunately necessary: https://github.com/nextcloud/nextcloud-vue/blob/a6f48808d77e1f1a78f43b379be6375b7469790d/src/components/AppSidebarTab/AppSidebarTab.vue#L66
+		activeTab() {
+			return this.$parent.activeTab
+		},
+	},
 }

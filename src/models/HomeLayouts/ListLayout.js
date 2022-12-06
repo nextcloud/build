@@ -1,3 +1,4 @@
+
 /**
  * @copyright Copyright (c) 2020 John Molakvoæ <skjnldsv@protonmail.com>
  *
@@ -18,17 +19,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-import AppMixin from './AppMixin'
+import ListLayout from '../../components/HomeLayouts/ListLayout'
 
 export default {
+	id: 'list',
+	icon: 'icon-layout-list',
+	name: t('build', 'List'),
+	default: true,
+
+	render: ListLayout,
+
 	props: {
-		uuid: {
+		title: {
+			name: t('build', 'Title'),
 			type: String,
-			default: '',
+			required: true,
+		},
+		subtitle: {
+			name: t('build', 'Subtitle'),
+			type: String,
+			required: false,
+		},
+		image: {
+			name: t('build', 'Image'),
+			type: Image,
+			required: false,
 		},
 	},
-
-	mixins: [AppMixin],
-
 }

@@ -21,29 +21,27 @@
   -->
 
 <template>
-	<div class="empty-content" role="note">
-		<div class="empty-content__icon" :class="icon" role="img" />
-		<h2 class="empty-content__title">
-			<slot />
-		</h2>
-		<p v-show="$slots.desc" class="empty-content__desc">
-			<slot name="desc" />
-		</p>
-		<div v-show="$slots.action" class="empty-content__action">
-			<slot name="action" />
-		</div>
-	</div>
+	<AppSidebarTab :id="id" :name="name" :icon="icon">
+		Settings
+	</AppSidebarTab>
 </template>
 
 <script>
-export default {
-	name: 'EmptyContent',
+import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 
-	props: {
-		icon: {
-			type: String,
-			default: 'icon-forms',
-		},
+import TabMixin from '../../mixins/TabMixin'
+export default {
+	name: 'TabSettings',
+
+	components: {
+		AppSidebarTab,
+	},
+	mixins: [TabMixin],
+
+	computed: {
+		icon: () => 'icon-settings',
+		id: () => 'build-settings',
+		name: () => t('build', 'Settings'),
 	},
 }
 </script>

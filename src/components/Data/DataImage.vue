@@ -34,35 +34,29 @@
 		@update:mandatory="onMandatoryChange"
 		@delete="onDelete">
 		<div class="question__content">
-			<textarea ref="textarea"
-				:aria-label="t('build', 'A long answer for the question “{text}”', { text })"
+			<input ref="input"
+				:aria-label="t('build', 'A short answer for the question “{text}”', { text })"
 				:placeholder="submissionInputPlaceholder"
 				:disabled="!readOnly"
 				:required="mandatory"
 				:value="values[0]"
-				class="question__text"
+				class="question__input"
 				:maxlength="maxStringLengths.answerText"
 				minlength="1"
+				type="text"
 				@input="onInput"
-				@keypress="autoSizeText"
-				@keydown.ctrl.enter="onKeydownCtrlEnter" />
+				@keydown.enter.exact.prevent="onKeydownEnter">
 		</div>
 	</Question>
 </template>
 
 <script>
-import QuestionMixin from '../../mixins/QuestionMixin'
+import DataMixin from '../../mixins/DataMixin'
 
 export default {
-	name: 'QuestionLong',
+	name: 'DataImage',
 
-	mixins: [QuestionMixin],
-
-	data() {
-		return {
-			height: 1,
-		}
-	},
+	mixins: [DataMixin],
 
 	computed: {
 		submissionInputPlaceholder() {
@@ -73,43 +67,25 @@ export default {
 		},
 	},
 
-	mounted() {
-		this.autoSizeText()
-	},
-
 	methods: {
 		onInput() {
-			const textarea = this.$refs.textarea
-			this.$emit('update:values', [textarea.value])
-			this.autoSizeText()
-		},
-		autoSizeText() {
-			const textarea = this.$refs.textarea
-			textarea.style.cssText = 'height:auto; padding:0'
-			textarea.style.cssText = `height: ${textarea.scrollHeight + 20}px`
-		},
-		onKeydownCtrlEnter(event) {
-			this.$emit('keydown', event)
+			const input = this.$refs.input
+			this.$emit('update:values', [input.value])
 		},
 	},
 }
 </script>
 
 <style lang="scss" scoped>
-.question__text {
-	// make sure height calculations are correct
-	box-sizing: content-box !important;
+// Using type to have a higher order than the input styling of server
+.question__input[type=text] {
 	width: 100%;
-	min-width: 100%;
-	max-width: 100%;
 	min-height: 44px;
 	margin: 0;
 	padding: 6px 0;
 	border: 0;
 	border-bottom: 1px dotted var(--color-border-dark);
 	border-radius: 0;
-	resize: none;
-	font-size: 14px;
 
 	&:disabled {
 		// Just overrides Server CSS-Styling for disabled inputs. -> Not Good??

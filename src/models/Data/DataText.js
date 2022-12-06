@@ -16,19 +16,22 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-
-import AppMixin from './AppMixin'
+import DataImage from '../../components/Data/DataImage'
 
 export default {
-	props: {
-		uuid: {
+	icon: 'icon-type-text',
+	name: t('build', 'Text'),
+	column: 'text',
+	provides: [
+		{
 			type: String,
-			default: '',
+			// Backend provides string
+			get: data => data.toString(),
 		},
-	},
+	],
 
-	mixins: [AppMixin],
-
+	component: DataImage,
 }

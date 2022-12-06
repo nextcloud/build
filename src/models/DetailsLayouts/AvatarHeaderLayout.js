@@ -1,3 +1,4 @@
+
 /**
  * @copyright Copyright (c) 2020 John Molakvoæ <skjnldsv@protonmail.com>
  *
@@ -19,16 +20,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AppMixin from './AppMixin'
+import AvatarHeader from '../../components/DetailsLayouts/AvatarHeaderLayout'
 
 export default {
+	id: 'avatar-header',
+	icon: 'icon-layout-avatar-header',
+	name: t('build', 'Avatar header'),
+	default: true,
+
+	render: AvatarHeader,
+
 	props: {
-		uuid: {
+		title: {
+			name: t('build', 'Title'),
 			type: String,
-			default: '',
+			required: true,
+		},
+		image: {
+			name: t('build', 'Heading image'),
+			type: Image,
+			required: true,
 		},
 	},
-
-	mixins: [AppMixin],
-
 }

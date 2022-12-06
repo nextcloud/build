@@ -30,6 +30,7 @@
 @include icon-black-white('answer-short', 'build', 1);
 @include icon-black-white('answer-long', 'build', 1);
 @include icon-black-white('drag-handle', 'build', 1);
+@include icon-black-white('square-foot', 'build', 1);
 
 .icon-yes {
 	@include icon-color('checkmark', 'actions', $color-success, 1, true);
@@ -57,3 +58,14 @@
 	width: 16px;
 	height: 16px;
 }
+
+
+// LAYOUTS
+@include icon-black-white('layout-list', 'build', 1);
+@include icon-black-white('layout-avatar-header', 'build', 1);
+
+// Types
+@include icon-black-white('type-image', 'build', 1);
+@include icon-black-white('type-text', 'build', 1);
+@include icon-black-white('type-url', 'build', 1);
+@include icon-black-white('type-contact', 'build', 1);
